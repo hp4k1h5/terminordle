@@ -10,10 +10,13 @@ import {
 import { display } from '../../cli/printer'
 import { msg } from './msg'
 
-export async function requestSession(session_id: string | undefined) {
+export async function requestSession(
+  address: string,
+  session_id: string | undefined,
+) {
   // create connection
   // server eventually responds with username
-  const ws = await createWS()
+  const ws = await createWS(address)
 
   // request session id
   if (!session_id) {

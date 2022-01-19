@@ -1,20 +1,66 @@
 # terminordle
 
-## server
+> multiplayer [wordle](https://www.powerlanguage.co.uk/wordle/) clone in your terminal
 
-## client
+![screenshot of local terminordle single player](./data/terminordle.png)
 
-- client: establish connection
-- server: grant user name
+terminordle (pronounced "terminalordle") is inspired by the popular online game [wordle](https://www.powerlanguage.co.uk/wordle/) made for your terminal. You can play a pretty close replica of the original locally or multiplayer over the network.
 
-### starting a session
+## install
 
-- client: request session
-- server: create session
-- client: join session
+```
+git clone https://github.com/HP4k1h5/terminordle.git
+cd terminordle
+yarn # or npm i
+```
 
-### joining a session
+## play
 
-- server: attach user to session
-- client: initiate repl
+### local single player
+
+from the `terminordle` directory
+
+```
+yarn play
+```
+
+### remote multiplayer
+
+To start or join a multiplayer session you must know the address of a running terminordle server. See [serve](#serve). I currently have one running at 174.138.46.61:8080. If the server is up and not overloaded, you can use it for your multiplayer sessions, or you can host your own.
+
+The key command is `join`.
+
+### new session
+
+To start a new session include only the address of the server
+
+``` bash
+yarn join 174.138.46.61:8080
+# If that server is overloaded try again later.
+```
+
+The server should respond with your user id and session name. These are both randomly chosen and cannot be changed. They are ephemeral.
+
+> example response
+
+```bash
+welcome to terminordle
+session id: session-name
+user id: Yong
+>>                      <<
+```
+
+The user id is chosen from the top one thousand most common names on Earth. The server-name is composed of two words chosen randomly from the word list. Share it with your friends and they can use it as [below](#join-session)
+
+### join session
+
+```
+yarn join 174.138.46.61:8080 -s session-name
+```
+
+## gameplay
+
+Standard wordle rules apply (mostly, submit an issue if there are discrepancies).
+
+The session is terminated on win to free up server space. Play again if there is capacity.
 

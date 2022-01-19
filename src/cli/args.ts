@@ -18,10 +18,11 @@ program
   })
 
 program
-  .command('join [session_id]')
-  .description(`${b`join`} ${y`[session_id]`} or leave blank to create new`)
-  .action(async session_id => {
-    const cnx = await requestSession(session_id)
+  .command('join <address>')
+  .option('-s, --session <session_id>', 'join session with id')
+  .description(`${b`join`} ${y`s session_id`} or leave blank to create new`)
+  .action(async (address, options) => {
+    const cnx = await requestSession(address, options.session)
     setSignals(cnx)
     await repl(cnx)
   })

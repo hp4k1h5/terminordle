@@ -8,6 +8,7 @@
     "serve": "tsc && node dist/src/cli serve"
   },
   "dependencies": {
+    "commander": "^8.3.0",
     "ws": "^8.4.2"
   },
   "devDependencies": {
