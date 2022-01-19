@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "strict": false,
+    "outDir": "./dist",
+    "allowJs": true,
+    "target": "ES2021",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "plugins": [
+      {
+        "name": "typescript-strict-plugin"
+      }
+    ]
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}
