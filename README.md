@@ -88,7 +88,9 @@ This means that there are no accounts or long-lived users at all and the players
 
 This application uses no external database and manages all user and session data in the node runtime memory. It currently limits concurrent connections to 1,000, and has other sensible settings for the WebSocketServer that restrict its memory and cpu footprint to (hopefully) the minimum necessary to serve hundreds of clients simultaneously. To be determined. Currently the security model of the app is to limit user input to session requests, join requests and guesses. That's all. Outgoing includes session metadata, guesses and error/info messages.
 
-Client input is validated client side and again server side before being processed. The risk of injection exists, but the only user input that should be alba to be printed is a five letter a-zA-Z guess. This is checked against wordlists and other must meet other criteria limiting its ability to contain malicious strings. Please sumbit an issue or pr if you find security problems.
+Client input is validated client side and again server side before being processed. The risk of injection exists, but the only user input that should be able to be printed is a five-letter `[a-zA-Z]` guess. This is checked against wordlists and must meet other criteria limiting its ability to contain malicious strings. Please submit an issue or pr if you find security problems.
+
+Example:
 
 ```bash
 yarn serve
@@ -104,7 +106,7 @@ The session is terminated on win or loss to free up server space. Play again if 
 
 ## data privacy
 
-This application makes no attempts to log or store or analyze any user data with the non-exclusive list of exceptions below. These exceptions should only apply if you are using the application in network (multiplayer) mode, and you are connecting to a server managed by [@HP4k1h5](https://github.com/HP4k1h5). In other cases, this software and its contributing authors make NO claims as to the reliability of service, or safety of connecting to any server, or the integrity of data privacy guarantees offered by those providers. Other servers may be running modified or corrupted versions of this software or may have other data privacy policies that are not in alignment with those expressed here.
+This application makes no attempts to log or store or analyze any user data with the non-exclusive list of exceptions below. These exceptions should only apply if you are using the application in network (multiplayer) mode, and you are connecting to a server managed by [@HP4k1h5](https://github.com/HP4k1h5). If you are using it locally, this app collects no data. In other cases, this software and its contributing authors make NO claims as to the reliability of service, or safety of connecting to any server not managed by @HP4k1h5, or the integrity of data privacy guarantees offered by those providers. Other servers may be running modified or corrupted versions of this software or may have other data privacy policies that are not in alignment with those expressed here.
 
 ### possible data collection exceptions
 
@@ -112,4 +114,4 @@ This application makes no attempts to log or store or analyze any user data with
 
 - in the course of operating the server, logging of various game related data (guesses, session_ids, etc) may occur and may be stored somewhere on a server for a limited time. This is used to debug the game, and should not include client metadata.
 
-- the guesses themselves and their associated fully-pseudonymous guesser and session may, at some point, be logged and retained as a data source. This is not currently happening and every effort would be made to warn users of associated changes. Currently all names are pseudonyms and there are no accounts of any kind, and any attempt to collect or use this type of data would be fully anonymized and would contain only the slightest risk of bearing actual user data (i.e. in the event that someone could post a series of guesses that was undesirable from a privacy or security standpoint.
+- the guesses themselves and their associated fully-pseudonymous guesser and session may, at some point, be logged and retained as a data source. This is not currently happening and every effort would be made to warn users of associated changes. Currently all names are pseudonyms and there are no accounts of any kind, and any attempt to collect or use this type of data would be fully anonymized and would contain only the slightest risk of bearing actual user data (i.e. in the event that someone could post a series of guesses that was undesirable from a privacy or security standpoint. This data would never be associated to anything like an i.p. or other piece of personally identifying information.
