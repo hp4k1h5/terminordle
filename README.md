@@ -8,7 +8,7 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 
 ## install
 
-```
+```bash
 git clone https://github.com/HP4k1h5/terminordle.git
 cd terminordle
 yarn # or npm i
@@ -20,7 +20,7 @@ yarn # or npm i
 
 from the `terminordle` directory
 
-```
+```bash
 yarn play
 ```
 
@@ -34,7 +34,7 @@ The key command is `join`.
 
 To start a new session include only the address of the server
 
-``` bash
+```bash
 yarn join 174.138.46.61:8080
 # If that server is overloaded try again later.
 ```
@@ -58,7 +58,7 @@ The user id is chosen from the top one thousand most common names on Earth. The 
 
 If you know the two-word name of a session, you can use a command like the following to join that session, replacing "session-name" with the actual name of the session you wish you join. Someone will have to share this with you, or you will have to run the above command to generate a valid session id, and then share that with your friends.
 
-```
+```bash
 yarn join 174.138.46.61:8080 -s session-name
 ```
 
@@ -66,8 +66,10 @@ yarn join 174.138.46.61:8080 -s session-name
 
 Host your own terminordle server.
 
-```
+```bash
 yarn serve
+# change the port with
+yarn serve 7357
 ```
 
 ## gameplay
@@ -75,3 +77,9 @@ yarn serve
 Standard wordle rules apply (mostly, submit an issue if there are discrepancies).
 
 The session is terminated on win to free up server space. Play again if there is capacity.
+
+## TODO:
+
+- add different wordlists, word lengths as command line options
+- add new game modes
+- better info display for joining parties
