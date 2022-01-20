@@ -10,6 +10,7 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 <!-- vim-markdown-toc GFM -->
 
 * [install](#install)
+  * [dependencies](#dependencies)
 * [*PLAY*](#play)
   * [local single player](#local-single-player)
   * [remote multiplayer](#remote-multiplayer)
@@ -23,6 +24,12 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 <!-- vim-markdown-toc -->
 
 ## install
+
+### dependencies
+
+- [nodeJs](https://nodejs.org/en/download/)
+  - tested with node `v17.3.1`
+- [yarn](https://classic.yarnpkg.com/lang/en/docs/install/) or [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ```bash
 git clone https://github.com/HP4k1h5/terminordle.git
