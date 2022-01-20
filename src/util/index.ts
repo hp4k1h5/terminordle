@@ -2,7 +2,7 @@ import * as fs from 'fs'
 
 import { Visibility, Option, Row } from '../lib/structs'
 
-export { typesetGuess, typesetAlphabet, infoIndex } from './typeset'
+export { typesetGuess, typesetAlphabet } from './typeset'
 export { names } from './data/names'
 
 const file = fs.readFileSync('./src/util/data/wordlist-5_5K.txt', 'utf8')

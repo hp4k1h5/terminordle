@@ -1,4 +1,4 @@
-import { Visibility, Option, Row } from './lib/structs'
+import { Visibility, Option, Row, Message } from './lib/structs'
 import { words, alphabet, letters } from './util'
 
 export function wordToRow(word: string): Array<Option> {
@@ -8,12 +8,14 @@ export function wordToRow(word: string): Array<Option> {
   }))
 }
 
-export function validateResponse(response: string) {
-  if (/[^a-z]/i.test(response)) {
+export function validateResponse(response: Message): void {
+  if (!response.content || typeof response.content !== 'string') {
+    throw 'bad guess'
+  } else if (/[^a-z]/i.test(response.content)) {
     throw 'only a-zA-Z'
-  } else if (response.length !== 5) {
+  } else if (response.content.length !== 5) {
     throw '5 letters only'
-  } else if (!words[response.toLocaleLowerCase()]) {
+  } else if (!words[response.content.toLocaleLowerCase()]) {
     throw 'not in wordlist'
   }
 }

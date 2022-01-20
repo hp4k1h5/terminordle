@@ -3,8 +3,7 @@ import { WS, WebSocket, Message, MsgType } from '../../lib/structs'
 import { validateMsg, msg } from './msg'
 export { requestSession } from './session'
 import { guess } from './session'
-import { display } from '../../cli'
-import { infoIndex } from '../../util'
+import { display, infoIndex } from '../../cli'
 
 const URL = 'localhost'
 
@@ -20,9 +19,10 @@ function error(ws, data) {
   // TODO:
   console.error('error from server', data)
 }
-function info(cnx, message: Message) {
+
+function info(cnx, message: Message, color: string = 'green') {
   if (typeof message.content === 'string') {
-    display.alterMessage(message.content, 'green')
+    display.alterMessage(message.content, color)
     display.print()
   }
 }

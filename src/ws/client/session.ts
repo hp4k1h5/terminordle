@@ -15,7 +15,7 @@ export async function requestSession(
   session_id: string | undefined,
 ) {
   // create connection
-  // server eventually responds with username
+  // server eventually responds with user_id
   const ws = await createWS(address)
 
   // request session id

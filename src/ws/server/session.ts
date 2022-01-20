@@ -58,7 +58,7 @@ export function createSession(ws: WS, message: Message) {
   try {
     session_id = sessionId()
   } catch (e) {
-    err(ws, 'no session_id')
+    err(ws, 'no session_id available', true)
     return
   }
 
@@ -107,15 +107,15 @@ export function join(ws: WS, message: Message) {
     return
   }
 
-  // limit users to one session per user
-  const userSession = Object.values(sessions).find((session: Session) =>
-    session.guests.find(guest => guest.id === message.user_id),
-  )
-
   const response: Message = {
     type: MsgType.session_id,
     user_id: message.user_id,
   }
+
+  // limit users to one session per user
+  const userSession = Object.values(sessions).find((session: Session) =>
+    session.guests.find(guest => guest.id === message.user_id),
+  )
 
   if (!userSession) {
     sessions[message.session_id].guests.push({ id: ws.user_id } as User)
@@ -136,15 +136,11 @@ export function join(ws: WS, message: Message) {
 }
 
 export function guess(ws: WS, message: Message) {
-  if (!message.content || typeof message.content !== 'string') {
-    err(ws, 'bad guess', true)
-    return
-  }
-
   try {
-    validateResponse(message.content)
+    validateResponse(message)
   } catch (e) {
-    console.error(message)
+    err(ws, e, true)
+    return
   }
 
   if (!message.session_id) {
@@ -159,15 +155,15 @@ export function guess(ws: WS, message: Message) {
   }
   const MAX_GUESSES = 20
   if (session.guesses.length >= MAX_GUESSES) {
-    err(ws, 'no more guesses', true)
-    // ws.close()
+    endSession(ws, 'no more guesses')
     return
   }
 
-  let guess = wordToRow(message.content)
+  let guess = wordToRow(message.content as string)
   evaluateGuess(guess, wordToRow(session.answer))
   session.guesses.push(guess)
 
+  // broadcast guess to session guests
   const sessionGuests: WS[] = []
   wss.clients.forEach((client: WS) => {
     if (
@@ -179,6 +175,7 @@ export function guess(ws: WS, message: Message) {
     }
   })
 
+  // check win condition
   message.content = guess
   const correct = isCorrect(guess)
   sessionGuests.forEach((guest, i) => {
@@ -193,5 +190,21 @@ export function guess(ws: WS, message: Message) {
       msg(guest, winMsg)
       remove(guest)
     }
+  })
+}
+
+function endSession(cnx, message) {
+  const session = sessions[cnx.session_id]
+  if (!session) {
+    err(cnx, message, true)
+    // still boot the connection
+    remove(cnx)
+    return
+  }
+
+  // boot all session guests from server
+  session.guests.forEach(guest => {
+    err(guest, message, true)
+    remove(guest)
   })
 }

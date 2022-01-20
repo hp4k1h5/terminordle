@@ -1,7 +1,7 @@
 import * as chalk from 'chalk'
 
 import { Row } from '../lib/structs'
-import { typesetAlphabet, typesetGuess, infoIndex } from '../util/'
+import { typesetAlphabet, typesetGuess } from '../util/'
 
 class Display {
   screen: string[]
@@ -38,3 +38,7 @@ class Display {
 }
 
 export const display = new Display()
+
+export function infoIndex(): number {
+  return display.screen.findIndex(line => /^>>/.test(line))
+}

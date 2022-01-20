@@ -80,7 +80,9 @@ export function createWSS(port = 8080) {
       cnx.user_id = userId()
     } catch (e) {
       err(cnx, e)
-      cnx.terminate()
+
+      remove(cnx)
+      // cnx.terminate()
       return
     }
 

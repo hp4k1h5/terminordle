@@ -26,7 +26,3 @@ export function typesetAlphabet(): string {
     })
     .join('')
 }
-
-export function infoIndex(): number {
-  return display.screen.findIndex(line => /^>>/.test(line))
-}

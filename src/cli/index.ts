@@ -1,6 +1,6 @@
 import * as process from 'process'
 
-export { display } from './printer'
+export { display, infoIndex } from './printer'
 export { repl } from './repl'
 import './args'
 

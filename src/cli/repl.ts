@@ -41,19 +41,15 @@ export async function repl(cnx = undefined) {
     let response: string
     try {
       response = await question('')
-    } catch (e) {
-      console.error(e)
-      continue
-    }
-
-    try {
-      validateResponse(response)
+      validateResponse({ type: MsgType.guess, content: response })
     } catch (e) {
       display.alterMessage(e)
       continue
     }
 
     guess = wordToRow(response)
+
+    // handle network connections
     if (cnx) {
       msg(cnx, {
         type: MsgType.guess,
@@ -64,12 +60,15 @@ export async function repl(cnx = undefined) {
       continue
     }
 
+    // otherwise continue locally
     evaluateGuess(guess, answer)
 
     guesses.push(guess)
     display.addToGuesses(guess)
+    // prints at top of loop
   }
 
+  // game over print and exit
   display.print()
   console.log('CORRECT!')
   process.exit(0)
