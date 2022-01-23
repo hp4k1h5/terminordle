@@ -1,3 +1,4 @@
+//@ts-strict
 import { Visibility, Option, Row, Message } from './lib/structs'
 import { words, alphabet, letters } from './util'
 
@@ -56,7 +57,7 @@ export function updateAlphabet(guess: Row): void {
 //   - exists somewhere in the answer
 //   - does not exist in that postion
 //   - is not already accounted for by previous guess instances of the letter
-function letterExists(guess, i, answer): boolean {
+function letterExists(guess: Row, i: number, answer: Row): boolean {
   const option = guess[i]
   if (!answer.find(l => l.letter === option.letter)) {
     return false
@@ -64,7 +65,7 @@ function letterExists(guess, i, answer): boolean {
 
   // get intersection of letter instances in guess and answer
   function sameLetterIndices(row: Row): number[] {
-    return row.slice().reduce((a, v, j) => {
+    return row.slice().reduce((a: number[], v, j) => {
       if (v.letter === option.letter) {
         a.push(j)
       }

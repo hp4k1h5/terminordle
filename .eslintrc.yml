@@ -20,7 +20,9 @@ rules:
     - error
     - single
   semi:
-    beforeStatementContinuationChars: always
+    - error
+    - never
+    - beforeStatementContinuationChars: always
 overrides:
   - files: ['*.json']
     rules:

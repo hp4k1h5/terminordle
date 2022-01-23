@@ -53,7 +53,7 @@ export function remove(ws) {
   }
 }
 
-export function createSession(ws: WS, message: Message) {
+export function createSession(ws: WS, message: Message): undefined {
   let session_id: string
   try {
     session_id = sessionId()
@@ -101,7 +101,7 @@ function selectAnswer(length: number = 5) {
   return getRand(filteredWordList)
 }
 
-export function join(ws: WS, message: Message) {
+export function join(ws: WS, message: Message): undefined {
   if (!message || !message.session_id || !sessions[message.session_id]) {
     err(ws, `no such session id ${message.session_id}`, true)
     return
@@ -135,7 +135,7 @@ export function join(ws: WS, message: Message) {
   })
 }
 
-export function guess(ws: WS, message: Message) {
+export function guess(ws: WS, message: Message): undefined {
   try {
     validateResponse(message)
   } catch (e) {

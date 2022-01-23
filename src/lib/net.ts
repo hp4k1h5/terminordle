@@ -2,12 +2,10 @@ import * as ws from 'ws'
 
 import { Option } from './structs'
 
-export const WebSocketServer = ws.WebSocketServer
-export const WebSocket = ws.WebSocket
-
-export interface WS extends ws.WebSocket {
-  user_id: string
-  session_id: string
+export interface WS extends WebSocket {
+  user_id?: string
+  session_id?: string
+  is_alive?: boolean
 }
 
 export enum MsgType {

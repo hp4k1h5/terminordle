@@ -1,4 +1,4 @@
-export const names = {
+export const names: { [key: string]: boolean } = {
   Maria: false,
   Nushi: false,
   Mohammed: false,

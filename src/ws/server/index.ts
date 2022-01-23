@@ -1,6 +1,8 @@
+//@ts-strict
 import {
   WebSocketServer,
   WebSocket,
+  WS,
   Message,
   MsgType,
   User,
@@ -26,14 +28,15 @@ export function createWSS(port = 8080) {
 
   // heartbeat
   const cycle = setInterval(function () {
-    wss.clients.forEach((client, i) => {
+    wss.clients.forEach((client: WebSocket, i: number) => {
+      client = client as WS
       if (client.is_alive === false) {
         remove(client)
         return
       }
 
       // reset
-      client.isAlive = false
+      client.is_alive = false
       client.ping()
     })
   }, 30_000)
@@ -42,7 +45,7 @@ export function createWSS(port = 8080) {
     clearInterval(cycle)
   })
 
-  wss.on('connection', function (cnx) {
+  wss.on('connection', function (cnx: WebSocket) {
     if (wss.clients.size >= MAX_CNX) {
       err(cnx, 'overload')
       cnx.close()
@@ -56,33 +59,30 @@ export function createWSS(port = 8080) {
     cnx.on('pong', heartbeat)
 
     cnx.on('message', function (data: Message) {
-      let message
+      let message: Message
       try {
         message = validateMsg(cnx, data)
       } catch (e) {
-        // err(cnx, e)
         return
       }
 
-      let response: Message
+      let response: Message | undefined
       try {
-        response = msgTypeToFn[message.type](cnx, message)
+        // response = msgTypeToFn[message.type](cnx, message)
       } catch (e) {
-        console.log(message)
         err(cnx, e)
         return
       }
 
-      msg(cnx, response)
+      response && msg(cnx, response)
     })
 
     try {
       cnx.user_id = userId()
     } catch (e) {
       err(cnx, e)
-
       remove(cnx)
-      // cnx.terminate()
+
       return
     }
 
@@ -97,7 +97,7 @@ export function createWSS(port = 8080) {
   return wss
 }
 
-function heartbeat() {
+function heartbeat(this: WS) {
   this.is_alive = true
   return heartbeat
 }
