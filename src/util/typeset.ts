@@ -1,3 +1,4 @@
+//@ts-strict
 import * as chalk from 'chalk'
 
 import { Visibility, Option, Row } from '../lib/structs'

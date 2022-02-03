@@ -1,3 +1,4 @@
+//@ts-strict
 import { Option } from './structs'
 
 export interface WS extends WebSocket {
