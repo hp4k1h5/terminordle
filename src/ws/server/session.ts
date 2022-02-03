@@ -20,11 +20,10 @@ export class Session {
 
 export function remove(ws: WS) {
   if (!ws.session_id) return
-  // TODO: log
-  console.log(`removing ${ws.user_id} from ${ws.session_id}`)
   const userSession = sessions[ws.session_id]
 
   if (userSession && userSession.guests) {
+    console.log(`removing ${ws.user_id} from ${ws.session_id}`)
     userSession.guests.splice(
       userSession.guests.findIndex(guest => guest.id === ws.user_id),
       1,
@@ -43,7 +42,7 @@ export function remove(ws: WS) {
 
   // only close open(ing) connections
   if (ws.readyState < 2) {
-    ws.terminate()
+    ws.close()
   }
 }
 
