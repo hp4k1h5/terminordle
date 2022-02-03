@@ -1,10 +1,12 @@
+//@ts-strict
 import * as process from 'process'
 
-export { display, infoIndex } from './printer'
+import { WS } from '../lib/structs'
+export { display, infoIndex, MsgColors } from './printer'
 export { repl } from './repl'
 import './args'
 
-export function setSignals(cnx) {
+export function setSignals() {
   process.stdin.resume()
 
   // default
@@ -13,7 +15,7 @@ export function setSignals(cnx) {
   process.on('SIGBREAK', handleSig)
 }
 
-function handleSig(cnx) {
+function handleSig(cnx: WS) {
   console.log('closing connection')
   // tell server to clear connection
   cnx.terminate()

@@ -1,9 +1,8 @@
 //@ts-strict
 import * as fs from 'fs'
 
-import { Visibility, Option, Row } from '../lib/structs'
+import { Visibility } from '../lib/structs'
 
-export { typesetGuess, typesetAlphabet } from './typeset'
 export { names } from './data/names'
 
 const file = fs.readFileSync('./src/util/data/wordlist-5_5K.txt', 'utf8')
@@ -11,7 +10,7 @@ const file = fs.readFileSync('./src/util/data/wordlist-5_5K.txt', 'utf8')
 type Words = { [key: string]: boolean }
 export const words: Words = file
   .split('\n')
-  .reduce((a: Words, v, i) => ((a[v.toLocaleLowerCase()] = true), a), {})
+  .reduce((a: Words, v) => ((a[v.toLocaleLowerCase()] = true), a), {})
 
 export const alphabet = Array.from(Array(26)).map((v, i) =>
   String.fromCharCode(i + 97),

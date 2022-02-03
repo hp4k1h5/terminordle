@@ -1,11 +1,12 @@
+//@ts-strict
 import * as readline from 'readline'
 
-import { Row, MsgType } from '../lib/structs'
+import { Row, MsgType, WS } from '../lib/structs'
 import './args'
 import { wordToRow, validateResponse, evaluateGuess, isCorrect } from '../'
 import { display } from './printer'
 import { msg } from '../ws/client/msg'
-import { getRand, names, words } from '../util'
+import { getRand, words } from '../util'
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -15,7 +16,7 @@ rl.on('close', function () {
   process.exit(0)
 })
 
-export async function question(query): Promise<string> {
+export async function question(query: string): Promise<string> {
   return new Promise(keep => {
     rl.question(query, function (answer) {
       keep(answer)
@@ -24,10 +25,10 @@ export async function question(query): Promise<string> {
 }
 
 const wordList = Object.keys(words)
-export async function repl(cnx = undefined) {
+export async function repl(cnx: WS | undefined = undefined) {
   let answer
   if (!cnx) {
-    let filteredWordList = wordList.filter(word => word.length === 5)
+    const filteredWordList = wordList.filter(word => word.length === 5)
     answer = wordToRow(getRand(filteredWordList))
   }
 
@@ -43,7 +44,7 @@ export async function repl(cnx = undefined) {
       response = await question('')
       validateResponse({ type: MsgType.guess, content: response })
     } catch (e) {
-      display.alterMessage(e)
+      display.alterMessage(e as string)
       continue
     }
 
@@ -61,7 +62,7 @@ export async function repl(cnx = undefined) {
     }
 
     // otherwise continue locally
-    evaluateGuess(guess, answer)
+    evaluateGuess(guess, answer as Row)
 
     guesses.push(guess)
     display.addToGuesses(guess)

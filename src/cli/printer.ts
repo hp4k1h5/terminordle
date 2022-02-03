@@ -1,7 +1,31 @@
+//@ts-strict
 import * as chalk from 'chalk'
 
-import { Row } from '../lib/structs'
-import { typesetAlphabet, typesetGuess } from '../util/'
+import { Visibility, Option, Row } from '../lib/structs'
+import { letters } from '../util'
+
+const optColorMap = {
+  [Visibility.hidden]: chalk.bgWhite,
+  [Visibility.guessed]: chalk.bgGray,
+  [Visibility.exists]: chalk.bgYellow,
+  [Visibility.revealed]: chalk.bgGreenBright,
+}
+
+export function typesetGuess(guess: Row): string {
+  return guess
+    .map((option: Option) => {
+      return optColorMap[option.visibility](option.letter)
+    })
+    .join('')
+}
+
+export function typesetAlphabet(): string {
+  return Object.entries(letters)
+    .map(([k, v]) => {
+      return optColorMap[v](k)
+    })
+    .join('')
+}
 
 class Display {
   screen: string[]
@@ -23,7 +47,7 @@ class Display {
     this.offBy = 0
   }
 
-  alterMessage(message: string = '', color: string = 'redBright') {
+  alterMessage(message = '', color: MsgColors = MsgColors['redBright']) {
     this.screen[this.screen.findIndex(line => /^>>/.test(line))] = `>> ${chalk[
       color
     ](message)}${' '.repeat(Math.max(21 - message.length, 0))}<<`
@@ -35,6 +59,11 @@ class Display {
     process.stdout.clearScreenDown()
     this.screen.forEach(line => process.stdout.write(line + '\n'))
   }
+}
+
+export enum MsgColors {
+  redBright = 'redBright',
+  green = 'green',
 }
 
 export const display = new Display()

@@ -1,3 +1,5 @@
+//@ts-strict
+import { WebSocketServer } from 'ws'
 import { Command } from 'commander'
 import * as chalk from 'chalk'
 
@@ -23,11 +25,11 @@ program
   .description(`${b`join`} ${y`s session_id`} or leave blank to create new`)
   .action(async (address, options) => {
     const cnx = await requestSession(address, options.session)
-    setSignals(cnx)
+    setSignals()
     await repl(cnx)
   })
 
-export let wss
+export let wss: WebSocketServer
 program
   .command('serve [port]')
   .description(`${b`serve`} terminordle on ${y`[port]`}`)
@@ -39,9 +41,9 @@ program
 program.parse(process.argv)
 
 //colors
-function b(txt) {
+function b(txt: TemplateStringsArray) {
   return chalk.blueBright(txt)
 }
-function y(txt) {
+function y(txt: TemplateStringsArray) {
   return chalk.yellowBright(txt)
 }
