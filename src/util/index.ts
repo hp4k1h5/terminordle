@@ -3,7 +3,6 @@ import * as fs from 'fs'
 
 import { Visibility } from '../lib/structs'
 
-export { typesetGuess, typesetAlphabet } from './typeset'
 export { names } from './data/names'
 
 const file = fs.readFileSync('./src/util/data/wordlist-5_5K.txt', 'utf8')
