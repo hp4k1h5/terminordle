@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "strict": false,
+    "strict": true,
     "outDir": "./dist",
     "allowJs": true,
     "target": "ES2021",
@@ -16,6 +16,6 @@
     ]
   },
   "include": [
-    "./src/**/*"
+    "./src/index.ts"
   ]
 }

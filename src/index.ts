@@ -1,6 +1,6 @@
 //@ts-strict
 import { Visibility, Option, Row, Message } from './lib/structs'
-import { words, alphabet, letters } from './util'
+import { words, letters } from './util'
 
 export function wordToRow(word: string): Array<Option> {
   return word.split('').map(letter => ({
@@ -44,7 +44,7 @@ export function evaluateGuess(guess: Row, answer: Row): void {
 
 // update alphabet when the evaluated guess comes from server
 export function updateAlphabet(guess: Row): void {
-  guess.forEach((option: Option, i: number) => {
+  guess.forEach((option: Option) => {
     const oL = option.letter.toLocaleLowerCase()
     if (letters[oL] !== Visibility.revealed) {
       letters[oL] = option.visibility

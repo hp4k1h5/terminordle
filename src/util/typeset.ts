@@ -1,8 +1,7 @@
 import * as chalk from 'chalk'
 
 import { Visibility, Option, Row } from '../lib/structs'
-import { words, alphabet, letters } from './'
-import { display } from '../cli'
+import { letters } from './'
 
 const optColorMap = {
   [Visibility.hidden]: chalk.bgWhite,

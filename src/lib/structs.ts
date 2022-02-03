@@ -1,4 +1,5 @@
-export { WS, WebSocket, WebSocketServer, Message, MsgType, User } from './net'
+//@ts-strict
+export { WS, Message, MsgType, User } from './net'
 
 export enum Visibility {
   hidden = 'hidden',
