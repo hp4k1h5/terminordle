@@ -1,3 +1,4 @@
+//@ts-strict
 import * as chalk from 'chalk'
 
 import { Visibility, Option, Row } from '../lib/structs'
@@ -46,7 +47,7 @@ class Display {
     this.offBy = 0
   }
 
-  alterMessage(message: string = '', color: string = 'redBright') {
+  alterMessage(message = '', color: MsgColors = MsgColors['redBright']) {
     this.screen[this.screen.findIndex(line => /^>>/.test(line))] = `>> ${chalk[
       color
     ](message)}${' '.repeat(Math.max(21 - message.length, 0))}<<`
@@ -58,6 +59,11 @@ class Display {
     process.stdout.clearScreenDown()
     this.screen.forEach(line => process.stdout.write(line + '\n'))
   }
+}
+
+export enum MsgColors {
+  redBright = 'redBright',
+  green = 'green',
 }
 
 export const display = new Display()

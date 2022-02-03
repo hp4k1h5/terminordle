@@ -4,7 +4,7 @@ import { WS, Message } from '../../lib/structs'
 import { validateMsg } from './msg'
 export { requestSession } from './session'
 import { guess } from './session'
-import { display, infoIndex } from '../../cli'
+import { display, infoIndex, MsgColors } from '../../cli'
 
 const URL = 'localhost'
 
@@ -23,7 +23,7 @@ function error(ws: WS, data: string | Message) {
   console.error('error from server', data)
 }
 
-function info(cnx: WS, message: Message, color = 'green') {
+function info(cnx: WS, message: Message, color: MsgColors = MsgColors.green) {
   if (typeof message.content === 'string') {
     display.alterMessage(message.content, color)
     display.print()
