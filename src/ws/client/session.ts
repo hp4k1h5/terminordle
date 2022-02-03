@@ -1,12 +1,7 @@
-import { MsgType, Row } from '../../lib/structs'
+//@ts-strict
+import { MsgType, WS, Row, Message } from '../../lib/structs'
 import { createWS } from './'
-import {
-  wordToRow,
-  validateResponse,
-  evaluateGuess,
-  updateAlphabet,
-  isCorrect,
-} from '../../'
+import { updateAlphabet } from '../../'
 import { display } from '../../cli/printer'
 import { msg } from './msg'
 
@@ -28,9 +23,9 @@ export async function requestSession(
   return ws
 }
 
-export function guess(cnx, message) {
-  updateAlphabet(message.content)
+export function guess(cnx: WS, message: Message) {
+  updateAlphabet(message.content as Row)
 
-  display.addToGuesses(message.content)
+  display.addToGuesses(message.content as Row)
   display.print()
 }

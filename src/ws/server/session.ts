@@ -1,15 +1,8 @@
-//@/ts-strict
-import {
-  WebSocketServer,
-  WS,
-  Message,
-  MsgType,
-  User,
-  Row,
-} from '../../lib/structs'
+//@ts-strict
+import { WS, Message, MsgType, User, Row } from '../../lib/structs'
 import { wordToRow, validateResponse, evaluateGuess, isCorrect } from '../../'
 import { wss } from '../../cli/args'
-import { validateMsg, msg, err } from './msg'
+import { msg, err } from './msg'
 import { getRand, names, words } from '../../util'
 
 export class Session {
@@ -25,8 +18,9 @@ export class Session {
   }
 }
 
-export function remove(ws) {
-  // remove user from session
+export function remove(ws: WS) {
+  if (!ws.session_id) return
+  // TODO: log
   console.log(`removing ${ws.user_id} from ${ws.session_id}`)
   const userSession = sessions[ws.session_id]
 
@@ -43,7 +37,7 @@ export function remove(ws) {
   }
 
   // free user name
-  if (names[ws.user_id]) {
+  if (ws.user_id && names[ws.user_id]) {
     names[ws.user_id] = false
   }
 
@@ -53,7 +47,7 @@ export function remove(ws) {
   }
 }
 
-export function createSession(ws: WS, message: Message): undefined {
+export function createSession(ws: WS): undefined {
   let session_id: string
   try {
     session_id = sessionId()
@@ -96,7 +90,7 @@ function sessionId(): string {
   throw 'no session available'
 }
 
-function selectAnswer(length: number = 5) {
+function selectAnswer(length = 5) {
   const filteredWordList = wordList.filter(word => word.length === length)
   return getRand(filteredWordList)
 }
@@ -159,27 +153,17 @@ export function guess(ws: WS, message: Message): undefined {
     return
   }
 
-  let guess = wordToRow(message.content as string)
+  const guess = wordToRow(message.content as string)
   evaluateGuess(guess, wordToRow(session.answer))
   session.guesses.push(guess)
 
   // broadcast guess to session guests
-  const sessionGuests: WS[] = []
-  wss.clients.forEach((client: WS) => {
-    if (
-      session.guests.find(guest => {
-        return guest.id === client.user_id
-      })
-    ) {
-      sessionGuests.push(client)
-    }
-  })
-
-  // check win condition
+  const sessionGuests = getGuests(session)
   message.content = guess
   const correct = isCorrect(guess)
-  sessionGuests.forEach((guest, i) => {
+  sessionGuests.forEach(guest => {
     msg(guest, message)
+    // check win condition
     if (correct) {
       const winMsg = {
         ...message,
@@ -193,7 +177,8 @@ export function guess(ws: WS, message: Message): undefined {
   })
 }
 
-function endSession(cnx, message) {
+function endSession(cnx: WS, message: string) {
+  if (!cnx.session_id) return
   const session = sessions[cnx.session_id]
   if (!session) {
     err(cnx, message, true)
@@ -203,8 +188,23 @@ function endSession(cnx, message) {
   }
 
   // boot all session guests from server
-  session.guests.forEach(guest => {
+  const guests = getGuests(session)
+  guests.forEach(guest => {
     err(guest, message, true)
     remove(guest)
   })
+}
+
+function getGuests(session: Session) {
+  const sessionGuests: WS[] = []
+  wss.clients.forEach((client: WS) => {
+    if (
+      session.guests.find(guest => {
+        return guest.id === client.user_id
+      })
+    ) {
+      sessionGuests.push(client)
+    }
+  })
+  return sessionGuests
 }

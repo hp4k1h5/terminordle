@@ -1,13 +1,13 @@
-import * as chalk from 'chalk'
-import { Message, MsgType } from '../../lib/structs'
+//@ts-strict
+import { WS, Message, MsgType } from '../../lib/structs'
 
-export function msg(cnx, m: Message) {
+export function msg(cnx: WS, m: Message) {
   cnx.send(JSON.stringify(m))
 }
 
-export function validateMsg(cnx, data) {
+export function validateMsg(cnx: WS, data: string | Message): Message {
   try {
-    data = JSON.parse(data)
+    data = JSON.parse(data as string) as Message
   } catch (e) {
     throw 'bad json'
   }

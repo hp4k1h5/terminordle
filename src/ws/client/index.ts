@@ -1,6 +1,7 @@
-//@/ts-strict
-import { WS, WebSocket, Message, MsgType } from '../../lib/structs'
-import { validateMsg, msg } from './msg'
+//@ts-strict
+import { WebSocket } from 'ws'
+import { WS, Message } from '../../lib/structs'
+import { validateMsg } from './msg'
 export { requestSession } from './session'
 import { guess } from './session'
 import { display, infoIndex } from '../../cli'
@@ -13,14 +14,16 @@ const msgTypeToFn = {
   info: info,
   error: error,
   guess: guess,
+  create: () => null,
+  join: () => null,
 }
 
-function error(ws, data) {
+function error(ws: WS, data: string | Message) {
   // TODO:
   console.error('error from server', data)
 }
 
-function info(cnx, message: Message, color: string = 'green') {
+function info(cnx: WS, message: Message, color = 'green') {
   if (typeof message.content === 'string') {
     display.alterMessage(message.content, color)
     display.print()
@@ -37,7 +40,6 @@ function setUserId(cnx: WS, message: Message) {
   display.print()
 }
 
-let count = 0
 function setSessionId(cnx: WS, message: Message) {
   if (cnx.session_id) return
   cnx.session_id = message.session_id
@@ -46,7 +48,7 @@ function setSessionId(cnx: WS, message: Message) {
   display.print()
 }
 
-export function createWS(url = URL, port = 8080): Promise<WS> {
+export function createWS(url = URL): Promise<WS> {
   return new Promise(keep => {
     const ws = new WebSocket(`ws://${url}`)
 
@@ -55,8 +57,8 @@ export function createWS(url = URL, port = 8080): Promise<WS> {
       keep(ws)
     })
 
-    ws.on('message', function (data) {
-      let message
+    ws.on('message', function (data: string) {
+      let message: Message | string
       try {
         message = validateMsg(ws, data)
       } catch (e) {
@@ -75,7 +77,7 @@ export function createWS(url = URL, port = 8080): Promise<WS> {
       return
     })
 
-    ws.on('close', function (data) {
+    ws.on('close', function () {
       console.log('goodbye')
       process.exit(0)
     })

@@ -1,12 +1,6 @@
 //@ts-strict
-import {
-  WebSocketServer,
-  WebSocket,
-  WS,
-  Message,
-  MsgType,
-  User,
-} from '../../lib/structs'
+import { WebSocketServer } from 'ws'
+import { WS, Message, MsgType } from '../../lib/structs'
 import { validateMsg, msg, err } from './msg'
 import { remove, createSession, join, guess } from './session'
 import { getRand, names } from '../../util'
@@ -15,6 +9,10 @@ const msgTypeToFn = {
   create: createSession,
   join: join,
   guess: guess,
+  info: () => null,
+  user_id: () => null,
+  session_id: () => null,
+  error: () => null,
 }
 
 const MAX_CNX = 1_000
@@ -28,8 +26,7 @@ export function createWSS(port = 8080) {
 
   // heartbeat
   const cycle = setInterval(function () {
-    wss.clients.forEach((client: WebSocket, i: number) => {
-      client = client as WS
+    wss.clients.forEach((client: WS) => {
       if (client.is_alive === false) {
         remove(client)
         return
@@ -45,7 +42,7 @@ export function createWSS(port = 8080) {
     clearInterval(cycle)
   })
 
-  wss.on('connection', function (cnx: WebSocket) {
+  wss.on('connection', function (cnx: WS) {
     if (wss.clients.size >= MAX_CNX) {
       err(cnx, 'overload')
       cnx.close()
@@ -58,7 +55,7 @@ export function createWSS(port = 8080) {
 
     cnx.on('pong', heartbeat)
 
-    cnx.on('message', function (data: Message) {
+    cnx.on('message', function (data: string) {
       let message: Message
       try {
         message = validateMsg(cnx, data)
@@ -66,9 +63,9 @@ export function createWSS(port = 8080) {
         return
       }
 
-      let response: Message | undefined
+      let response: Message | null | undefined
       try {
-        // response = msgTypeToFn[message.type](cnx, message)
+        response = msgTypeToFn[message.type](cnx, message)
       } catch (e) {
         err(cnx, e)
         return
@@ -107,7 +104,7 @@ const nameList = Object.keys(names)
 export function userId(): string {
   let attempts = 0
   const MAX_ATTEMPTS = 10
-  let _nameList = nameList.filter(name => names[name] === false)
+  const _nameList = nameList.filter(name => names[name] === false)
   let name
   while (!name && attempts++ < MAX_ATTEMPTS) {
     name = getRand(_nameList)
