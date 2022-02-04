@@ -3,7 +3,7 @@ import { WebSocketServer } from 'ws'
 import { WS, Message, MsgType } from '../../lib/structs'
 import { validateMsg, msg, err } from './msg'
 import { remove, createSession, join, guess } from './session'
-import { getRand, names } from '../../util'
+import { getRand, names, Log } from '../../util'
 
 const msgTypeToFn = {
   create: createSession,
@@ -16,7 +16,7 @@ const msgTypeToFn = {
 }
 
 const MAX_CNX = 1_000
-export function createWSS(port = 8080) {
+export function createWSS(port = 8080, log: Log) {
   const wss = new WebSocketServer({
     port,
     backlog: 100,
@@ -44,7 +44,7 @@ export function createWSS(port = 8080) {
 
   wss.on('connection', function (cnx: WS) {
     if (wss.clients.size >= MAX_CNX) {
-      err(cnx, 'overload')
+      err(cnx, `overload : ${cnx}`, log)
       cnx.close()
       return
     }
@@ -60,14 +60,29 @@ export function createWSS(port = 8080) {
       try {
         message = validateMsg(cnx, data)
       } catch (e) {
+        msg(cnx, { type: MsgType.error, content: 'bad message' })
+        err(cnx, e, log)
+
         return
       }
 
-      let response: Message | null | undefined
+      let response:
+        | Message
+        | null
+        | undefined
+        | { [key: string?]: true }
       try {
         response = msgTypeToFn[message.type](cnx, message)
       } catch (e) {
-        err(cnx, e)
+        err(cnx, e, log)
+
+        return
+      }
+
+      if (response && response.log) {
+        delete response.log
+        log.log(response)
+
         return
       }
 
@@ -77,11 +92,13 @@ export function createWSS(port = 8080) {
     try {
       cnx.user_id = userId()
     } catch (e) {
-      err(cnx, e)
+      err(cnx, e, log)
       remove(cnx)
 
       return
     }
+
+    log.log({ connection: 'established', with: 'cnx.user_id' })
 
     // send user id back
     msg(cnx, {
@@ -114,7 +131,3 @@ export function userId(): string {
       names[name] = true
       return name
     }
-  }
-
-  throw 'no available user id'
-}

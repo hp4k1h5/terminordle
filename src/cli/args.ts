@@ -5,6 +5,7 @@ import * as chalk from 'chalk'
 
 import { createWSS, requestSession } from '../ws'
 import { setSignals, repl } from '../cli'
+import { Log } from '../util'
 import { version } from '../../package.json'
 
 const program = new Command()
@@ -32,10 +33,13 @@ program
 export let wss: WebSocketServer
 program
   .command('serve [port]')
+  .option('-l, --logfile [filepath]', 'specify logfile path')
   .description(`${b`serve`} terminordle on ${y`[port]`}`)
-  .action((port = 8080) => {
-    wss = createWSS(port)
+  .action((port = 8080, options) => {
+    const log: Log = new Log(options.logfile, true)
+    wss = createWSS(port, log)
     console.log('serving...', wss.address())
+    log.log({ 'serving...': wss.address() })
   })
 
 program.parse(process.argv)

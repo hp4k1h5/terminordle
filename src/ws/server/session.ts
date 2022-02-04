@@ -46,18 +46,18 @@ export function remove(ws: WS) {
   }
 }
 
-export function createSession(ws: WS): undefined {
+export function createSession(
+  ws: WS,
+): undefined | { [key: string]: string | true } {
   let session_id: string
   try {
     session_id = sessionId()
   } catch (e) {
-    err(ws, 'no session_id available', true)
     return
   }
 
   const answer = selectAnswer(5)
   sessions[session_id].answer = answer
-  console.log('sess id:', session_id, '  answer:', answer)
 
   const response = {
     type: MsgType.session_id,
@@ -67,6 +67,8 @@ export function createSession(ws: WS): undefined {
   }
 
   join(ws, response)
+
+  return { log: true, session_id, answer }
 }
 
 const wordList = Object.keys(words)

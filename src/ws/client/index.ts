@@ -1,10 +1,10 @@
 //@ts-strict
 import { WebSocket } from 'ws'
 import { WS, Message } from '../../lib/structs'
-import { validateMsg } from './msg'
-export { requestSession } from './session'
 import { guess } from './session'
 import { display, infoIndex, MsgColors } from '../../cli'
+import { validateMsg } from './msg'
+export { requestSession } from './session'
 
 const URL = 'localhost'
 
