@@ -1,9 +1,18 @@
 //@ts-strict
-import { WS, Message, MsgType, User, Row } from '../../lib/structs'
+import {
+  WS,
+  Message,
+  ClientMessage,
+  ServerMessage,
+  MsgType,
+  ClientMsgType,
+  User,
+  Row,
+} from '../../lib/structs'
 import { wordToRow, validateResponse, evaluateGuess, isCorrect } from '../../'
 import { wss } from '../../cli/args'
 import { msg, err } from './msg'
-import { getRand, names, words } from '../../util'
+import { getRand, names, words, Log } from '../../util'
 
 export class Session {
   session_id: string
@@ -48,7 +57,9 @@ export function remove(ws: WS) {
 
 export function createSession(
   ws: WS,
-): undefined | { [key: string]: string | true } {
+  message?: ServerMessage,
+  log?: Log,
+): ClientMessage | undefined {
   let session_id: string
   try {
     session_id = sessionId()
@@ -59,16 +70,15 @@ export function createSession(
   const answer = selectAnswer(5)
   sessions[session_id].answer = answer
 
-  const response = {
+  const response: ClientMessage = {
     type: MsgType.session_id,
     user_id: ws.user_id,
     content: session_id,
     session_id,
   }
 
+  log && log.log(response)
   join(ws, response)
-
-  return { log: true, session_id, answer }
 }
 
 const wordList = Object.keys(words)
@@ -98,11 +108,11 @@ function selectAnswer(length = 5) {
 
 export function join(ws: WS, message: Message): undefined {
   if (!message || !message.session_id || !sessions[message.session_id]) {
-    err(ws, `no such session id ${message.session_id}`, true)
+    err(ws, `no such session id ${message.session_id}`)
     return
   }
 
-  const response: Message = {
+  const response: ClientMessage = {
     type: MsgType.session_id,
     user_id: message.user_id,
   }
@@ -130,22 +140,22 @@ export function join(ws: WS, message: Message): undefined {
   })
 }
 
-export function guess(ws: WS, message: Message): undefined {
+export function guess(ws: WS, message: ServerMessage): undefined {
   try {
     validateResponse(message)
   } catch (e) {
-    err(ws, e, true)
+    err(ws, e)
     return
   }
 
   if (!message.session_id) {
-    err(ws, 'no session_id', true)
+    err(ws, 'no session_id')
     return
   }
 
   const session = sessions[message.session_id]
   if (!session) {
-    err(ws, 'no such session_id', true)
+    err(ws, 'no such session_id')
     return
   }
   const MAX_GUESSES = 20
@@ -160,10 +170,13 @@ export function guess(ws: WS, message: Message): undefined {
 
   // broadcast guess to session guests
   const sessionGuests = getGuests(session)
-  message.content = guess
+  const response: ClientMessage = {
+    type: ClientMsgType.guess,
+    content: guess,
+  }
   const correct = isCorrect(guess)
   sessionGuests.forEach(guest => {
-    msg(guest, message)
+    msg(guest, response)
     // check win condition
     if (correct) {
       const winMsg = {
@@ -182,7 +195,7 @@ function endSession(cnx: WS, message: string) {
   if (!cnx.session_id) return
   const session = sessions[cnx.session_id]
   if (!session) {
-    err(cnx, message, true)
+    err(cnx, message)
     // still boot the connection
     remove(cnx)
     return
@@ -191,7 +204,7 @@ function endSession(cnx: WS, message: string) {
   // boot all session guests from server
   const guests = getGuests(session)
   guests.forEach(guest => {
-    err(guest, message, true)
+    err(guest, message)
     remove(guest)
   })
 }

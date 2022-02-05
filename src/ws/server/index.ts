@@ -1,18 +1,26 @@
 //@ts-strict
 import { WebSocketServer } from 'ws'
-import { WS, Message, MsgType } from '../../lib/structs'
+import {
+  WS,
+  ClientMessage,
+  MsgType,
+  ServerMsgType,
+  ServerMessage,
+} from '../../lib/structs'
 import { validateMsg, msg, err } from './msg'
 import { remove, createSession, join, guess } from './session'
 import { getRand, names, Log } from '../../util'
 
-const msgTypeToFn = {
+const msgTypeToFn: {
+  [key in ServerMsgType]: (
+    ws: WS,
+    msg: ServerMessage,
+    // log: Log,
+  ) => undefined | ClientMessage
+} = {
   create: createSession,
   join: join,
   guess: guess,
-  info: () => null,
-  user_id: () => null,
-  session_id: () => null,
-  error: () => null,
 }
 
 const MAX_CNX = 1_000
@@ -56,7 +64,7 @@ export function createWSS(port = 8080, log: Log) {
     cnx.on('pong', heartbeat)
 
     cnx.on('message', function (data: string) {
-      let message: Message
+      let message: ServerMessage
       try {
         message = validateMsg(cnx, data)
       } catch (e) {
@@ -66,23 +74,11 @@ export function createWSS(port = 8080, log: Log) {
         return
       }
 
-      let response:
-        | Message
-        | null
-        | undefined
-        | { [key: string?]: true }
+      let response: ClientMessage | undefined
       try {
         response = msgTypeToFn[message.type](cnx, message)
       } catch (e) {
         err(cnx, e, log)
-
-        return
-      }
-
-      if (response && response.log) {
-        delete response.log
-        log.log(response)
-
         return
       }
 
@@ -98,7 +94,7 @@ export function createWSS(port = 8080, log: Log) {
       return
     }
 
-    log.log({ connection: 'established', with: 'cnx.user_id' })
+    log.log({ connection: 'established', with: cnx.user_id })
 
     // send user id back
     msg(cnx, {
@@ -118,7 +114,7 @@ function heartbeat(this: WS) {
 
 const nameList = Object.keys(names)
 
-export function userId(): string {
+export function userId(): string | undefined {
   let attempts = 0
   const MAX_ATTEMPTS = 10
   const _nameList = nameList.filter(name => names[name] === false)
@@ -131,3 +127,5 @@ export function userId(): string {
       names[name] = true
       return name
     }
+  }
+}

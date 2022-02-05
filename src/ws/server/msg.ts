@@ -1,8 +1,14 @@
 //@ts-strict
-import { WS, Message, MsgType } from '../../lib/structs'
+import {
+  WS,
+  ServerMessage,
+  ClientMessage,
+  MsgType,
+  ServerMsgType,
+} from '../../lib/structs'
 import { Log } from '../../util'
 
-export function msg(cnx: WS, m: Message) {
+export function msg(cnx: WS, m: ClientMessage) {
   cnx.send(JSON.stringify(m))
 }
 
@@ -13,14 +19,14 @@ export function err(cnx: WS, e: string | unknown, log: false | Log = false) {
 }
 
 export function validateMsg(cnx: WS, data: string) {
-  let message: Message
+  let message: ServerMessage
   try {
     message = JSON.parse(data)
   } catch (e) {
     throw 'bad json'
   }
 
-  if (!message.type || !(message.type in MsgType)) {
+  if (!message.type || !(message.type in ServerMsgType)) {
     throw `bad message type ${message.type}`
   }
 
