@@ -1,6 +1,6 @@
 {
   "name": "@hp4k15/terminordle",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "help": "tsc && node dist/src/cli --help",
     "play": "tsc && node dist/src/cli play",

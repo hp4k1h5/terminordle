@@ -9,6 +9,9 @@ import { AddressInfo } from 'ws'
 const dirname = process.cwd()
 
 export function fp(relPath: string) {
+  if (path.isAbsolute(relPath)) {
+    return relPath
+  }
   return path.resolve(path.join(dirname, relPath))
 }
 
@@ -18,7 +21,7 @@ export class Log {
   filepath: string
   logger
   reader
-  constructor(relPath = 'tmp/terminordle-log.jsonl', overwrite = true) {
+  constructor(relPath = '/tmp/terminordle-log.jsonl', overwrite = true) {
     this.filepath = fp(relPath)
 
     this.logger = (function (_this: Log) {
