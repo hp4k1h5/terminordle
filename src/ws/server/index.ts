@@ -15,7 +15,7 @@ const msgTypeToFn: {
   [key in ServerMsgType]: (
     ws: WS,
     msg: ServerMessage,
-    // log: Log,
+    log?: Log,
   ) => undefined | ClientMessage
 } = {
   create: createSession,
@@ -76,7 +76,7 @@ export function createWSS(port = 8080, log: Log) {
 
       let response: ClientMessage | undefined
       try {
-        response = msgTypeToFn[message.type](cnx, message)
+        response = msgTypeToFn[message.type](cnx, message, log)
       } catch (e) {
         err(cnx, e, log)
         return

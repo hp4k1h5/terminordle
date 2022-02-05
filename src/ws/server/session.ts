@@ -27,18 +27,22 @@ export class Session {
   }
 }
 
-export function remove(ws: WS) {
+export function remove(ws: WS, message?: Message, log?: Log) {
   if (!ws.session_id) return
   const userSession = sessions[ws.session_id]
 
   if (userSession && userSession.guests) {
-    console.log(`removing ${ws.user_id} from ${ws.session_id}`)
     userSession.guests.splice(
       userSession.guests.findIndex(guest => guest.id === ws.user_id),
       1,
     )
+    log &&
+      log.log({
+        removing: ws.user_id,
+        from: ws.session_id,
+        clients: wss.clients.size,
+      })
   }
-
   // delete session if empty
   if (userSession && userSession.guests.length === 0) {
     delete sessions[ws.session_id]
@@ -77,7 +81,7 @@ export function createSession(
     session_id,
   }
 
-  log && log.log(response)
+  log && log.log({ session_id, answer })
   join(ws, response)
 }
 
@@ -140,7 +144,7 @@ export function join(ws: WS, message: Message): undefined {
   })
 }
 
-export function guess(ws: WS, message: ServerMessage): undefined {
+export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
   try {
     validateResponse(message)
   } catch (e) {
@@ -186,7 +190,7 @@ export function guess(ws: WS, message: ServerMessage): undefined {
       }
 
       msg(guest, winMsg)
-      remove(guest)
+      remove(guest, winMsg, log)
     }
   })
 }

@@ -4,11 +4,15 @@ import * as path from 'path'
 import * as readline from 'readline'
 import * as process from 'process'
 
+import { AddressInfo } from 'ws'
+
 const dirname = process.cwd()
 
 export function fp(relPath: string) {
   return path.resolve(path.join(dirname, relPath))
 }
+
+type Line = { [key: string]: string | Date | AddressInfo | number | undefined }
 
 export class Log {
   filepath: string
@@ -37,7 +41,8 @@ export class Log {
     })
   }
 
-  log(line: { [key: string]: string | Date } | unknown) {
+  log(line: Line) {
+    line.timestamp = new Date()
     this.logger.write(JSON.stringify(line) + '\n')
   }
 
