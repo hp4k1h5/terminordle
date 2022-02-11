@@ -42,14 +42,22 @@ yarn global add @hP4k1h5/terminordle
 or clone this repo
 
 ```bash
+# clone this repo
+
 git clone https://github.com/HP4k1h5/terminordle.git
+
+# build the app
+
 cd terminordle
 yarn # or npm i
+yarn build
 ```
 
 ## *PLAY*
 
-if you installed globally (`npm -g install terminordle` / `yarn global add @hP4k1h5/terminordle`) then you should have a global alias `terminordle`. You can also `cd` to this repo and run `yarn link`.
+if you installed globally (`npm -g install @hP4k1h5/terminordle` / `yarn global add @hP4k1h5/terminordle`) then you should have a global alias `terminordle`. You can also `cd` to this repo and run `yarn link`.
+
+If you cloned the app you can cd into the repo and replace `terminordle` in the following commands with `yarn` or `npx`.
 
 ### local single player
 
