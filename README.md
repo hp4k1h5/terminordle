@@ -31,6 +31,16 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
   - tested with node `v17.3.1`
 - [yarn](https://classic.yarnpkg.com/lang/en/docs/install/) or [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
+use npm
+
+```
+npm -g install terminordle
+# OR
+yarn global add @hP4k1h5/terminordle
+```
+
+or clone this repo
+
 ```bash
 git clone https://github.com/HP4k1h5/terminordle.git
 cd terminordle
@@ -39,12 +49,12 @@ yarn # or npm i
 
 ## *PLAY*
 
+if you installed globally (`npm -g install terminordle` / `yarn global add @hP4k1h5/terminordle`) then you should have a global alias `terminordle`. You can also `cd` to this repo and run `yarn link`.
+
 ### local single player
 
-from the `terminordle` directory
-
 ```bash
-yarn play
+terminordle play
 ```
 
 ### remote multiplayer
@@ -58,7 +68,7 @@ The key command is `join`.
 To start a new session include only the address of the server
 
 ```bash
-yarn join 174.138.46.61:8080
+terminordle join 174.138.46.61:8080
 # If that server is overloaded try again later.
 ```
 
@@ -82,7 +92,7 @@ The user id is chosen from the top one thousand most common names on Earth. The 
 If you know the two-word name of a session, you can use a command like the following to join that session, replacing "session-name" with the actual name of the session you wish you join. Someone will have to share this with you, or you will have to run the above command to generate a valid session id, and then share that with your friends.
 
 ```bash
-yarn join 174.138.46.61:8080 -s session-name
+terminordle join 174.138.46.61:8080 -s session-name
 ```
 
 ## *SERVE*
@@ -100,9 +110,9 @@ Client input is validated client side and again server side before being process
 Example:
 
 ```bash
-yarn serve
+terminordle serve
 # change the port with
-yarn serve 7357
+terminordle serve 7357
 ```
 
 ## gameplay
