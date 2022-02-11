@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { WebSocketServer } from 'ws'
 import { Command } from 'commander'
 import * as chalk from 'chalk'

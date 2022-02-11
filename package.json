@@ -1,17 +1,21 @@
 {
   "name": "@hp4k1h5/terminordle",
-  "version": "0.0.0",
+  "version": "0.0.5",
+  "license": "MIT",
   "scripts": {
-    "help": "cli --help",
-    "play": "cli play",
-    "join": "cli join",
-    "serve": "cli serve",
+    "help": "terminordle --help",
+    "play": "terminordle play",
+    "join": "terminordle join",
+    "serve": "terminordle serve",
     "test": "mocha -r ts-node/register 'tests/**/*.*'",
-    "build": "tsc",
-    "nothing": "yarn build"
+    "build": "tsc"
   },
   "bin": {
-    "cli": "dist/src/cli"
+    "terminordle": "dist/src/cli/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HP4k1h5/terminordle.git"
   },
   "dependencies": {
     "commander": "^9.0.0",
@@ -34,6 +38,7 @@
     "typescript-strict-plugin": "^2.0.0-beta.1"
   },
   "files": [
+    "src/**/*/*",
     "dist/**/*.*"
   ]
 }
