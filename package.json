@@ -1,6 +1,6 @@
 {
   "name": "@hp4k1h5/terminordle",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "license": "MIT",
   "scripts": {
     "help": "terminordle --help",
@@ -39,6 +39,17 @@
   },
   "files": [
     "src/**/*",
-    "dist/**/*.*"
+    "dist/**/*.*",
+    "dist_data/*"
+  ],
+  "keywords": [
+    "wordle",
+    "multiplayer",
+    "game",
+    "typescript",
+    "websockets",
+    "terminal",
+    "cli",
+    "tui"
   ]
 }

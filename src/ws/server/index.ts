@@ -58,7 +58,6 @@ export function createWSS(port = 8080, log: Log) {
     }
 
     cnx.on('close', function () {
-      console.log('closing here')
       remove(cnx, log)
     })
 

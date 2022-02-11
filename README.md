@@ -2,7 +2,7 @@
 
 > multiplayer [wordle](https://www.powerlanguage.co.uk/wordle/) clone in your terminal
 
-![screenshot of local terminordle single player](./src/util/data/terminordle.png)
+![screenshot of local terminordle single player](./dist_data/terminordle.png)
 
 terminordle (pronounced "terminalordle") is inspired by the popular online game [wordle](https://www.powerlanguage.co.uk/wordle/) made for your terminal. You can play a pretty close replica of the original locally or multiplayer over the network.
 
