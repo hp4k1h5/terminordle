@@ -27,7 +27,7 @@ export class Session {
   }
 }
 
-export function remove(ws: WS, message?: Message, log?: Log) {
+export function remove(ws: WS, log?: Log) {
   if (!ws.session_id) return
   const userSession = sessions[ws.session_id]
 
@@ -43,6 +43,7 @@ export function remove(ws: WS, message?: Message, log?: Log) {
         clients: wss.clients.size,
       })
   }
+
   // delete session if empty
   if (userSession && userSession.guests.length === 0) {
     delete sessions[ws.session_id]
@@ -178,9 +179,13 @@ export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
     type: ClientMsgType.guess,
     content: guess,
   }
+
   const correct = isCorrect(guess)
+
   sessionGuests.forEach(guest => {
+    // update client
     msg(guest, response)
+
     // check win condition
     if (correct) {
       const winMsg = {
@@ -190,7 +195,7 @@ export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
       }
 
       msg(guest, winMsg)
-      remove(guest, winMsg, log)
+      remove(guest, log)
     }
   })
 }

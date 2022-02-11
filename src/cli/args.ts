@@ -38,6 +38,7 @@ program
   .action((port = 8080, options) => {
     const log: Log = new Log(options.logfile, true)
     wss = createWSS(port, log)
+
     console.log('serving...', wss.address())
     log.log({ 'serving...': wss.address() })
   })
