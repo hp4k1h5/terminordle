@@ -16,6 +16,7 @@
     ]
   },
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts",
+    "./src/util/data/wordlist-5_5K.txt"
   ]
 }

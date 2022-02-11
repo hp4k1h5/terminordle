@@ -1,12 +1,16 @@
 //@ts-strict
 import * as fs from 'fs'
+import * as path from 'path'
 
 import { Visibility } from '../lib/structs'
 
 export { names } from './data/names'
 export { Log } from './log'
 
-const file = fs.readFileSync('./src/util/data/wordlist-5_5K.txt', 'utf8')
+const file = fs.readFileSync(
+  path.join(__dirname, '../../src/util/data/wordlist-5_5K.txt'),
+  'utf8',
+)
 
 type Words = { [key: string]: boolean }
 export const words: Words = file
