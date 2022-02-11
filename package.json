@@ -1,12 +1,17 @@
 {
-  "name": "@hp4k15/terminordle",
-  "version": "0.0.1",
+  "name": "@hp4k1h5/terminordle",
+  "version": "0.0.0",
   "scripts": {
-    "help": "tsc && node dist/src/cli --help",
-    "play": "tsc && node dist/src/cli play",
-    "join": "tsc && node dist/src/cli join",
-    "serve": "tsc && node dist/src/cli serve",
-    "test": "mocha -r ts-node/register 'tests/**/*.*'"
+    "help": "cli --help",
+    "play": "cli play",
+    "join": "cli join",
+    "serve": "cli serve",
+    "test": "mocha -r ts-node/register 'tests/**/*.*'",
+    "build": "tsc",
+    "nothing": "yarn build"
+  },
+  "bin": {
+    "cli": "dist/src/cli"
   },
   "dependencies": {
     "commander": "^9.0.0",
@@ -27,5 +32,8 @@
     "ts-node": "^10.4.0",
     "typescript": "^4.5.5",
     "typescript-strict-plugin": "^2.0.0-beta.1"
-  }
+  },
+  "files": [
+    "dist/**/*.*"
+  ]
 }
