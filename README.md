@@ -11,11 +11,14 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 
 * [install](#install)
   * [dependencies](#dependencies)
+  * [download app](#download-app)
+* [HELP](#help)
 * [*PLAY*](#play)
   * [local single player](#local-single-player)
   * [remote multiplayer](#remote-multiplayer)
     * [new session](#new-session)
-    * [join session](#join-session)
+      * [user ids](#user-ids)
+    * [join existing session](#join-existing-session)
 * [*SERVE*](#serve)
 * [gameplay](#gameplay)
 * [data privacy](#data-privacy)
@@ -31,7 +34,7 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
   - tested with node `v17.3.1`
 - [yarn](https://classic.yarnpkg.com/lang/en/docs/install/) or [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
-use npm
+### download app
 
 ```
 npm -g install terminordle
@@ -49,15 +52,21 @@ git clone https://github.com/HP4k1h5/terminordle.git
 # build the app
 
 cd terminordle
-yarn # or npm i
-yarn build
+yarn # or # npm i
+yarn build # or # npm run build
+# optional
+yarn link # or # npm link
+```
+
+## HELP
+
+```bash
+terminordle help
 ```
 
 ## *PLAY*
 
 if you installed globally (`npm -g install @hP4k1h5/terminordle` / `yarn global add @hP4k1h5/terminordle`) then you should have a global alias `terminordle`. You can also `cd` to this repo and run `yarn link`.
-
-If you cloned the app you can cd into the repo and replace `terminordle` in the following commands with `yarn` or `npx`.
 
 ### local single player
 
@@ -73,14 +82,17 @@ The key command is `join`.
 
 #### new session
 
-To start a new session include only the address of the server
+To start a new multiplayer session include only the address of the server. If no address is provided, you will be connected to the default server at `terminordle.fun`. The following commands are functionally equivalent:
 
 ```bash
-terminordle join 174.138.46.61:8080
-# If that server is overloaded try again later.
+terminordle join 
+
+terminordle join terminordle.fun
+
+terminordle join 174.138.46.61:80
 ```
 
-The server should respond with your user id and session name. These are both randomly chosen and cannot be changed. They are ephemeral.
+The server should respond with your user id and session name. These are both randomly chosen and cannot be changed. They are ephemeral. Share the session id with a friend so they can use it as [shown below](#join-existing-session).
 
 > example response
 
@@ -93,19 +105,27 @@ abcdefghijklmnopqrstuvwxyz
 
 ```
 
+> If you git cloned the app and haven't `yarn link`ed you can `cd` into the repo and replace `terminordle` in the previous commands with `npx terminordle`.
+
+##### user ids
 The user id is chosen from the top one thousand most common names on Earth. The session-name is composed of two words chosen randomly from the word list. Share it with your friends and they can use it as [shown below](#join-session)
 
-#### join session
+#### join existing session
 
 If you know the two-word name of a session, you can use a command like the following to join that session, replacing "session-name" with the actual name of the session you wish you join. Someone will have to share this with you, or you will have to run the above command to generate a valid session id, and then share that with your friends.
 
+Replace "session-name" with the session name provided to another player when they created a session:
+
 ```bash
-terminordle join 174.138.46.61:8080 -s session-name
+terminordle join -s session-name 
+
+# or if you are joining another server
+terminordle join 192.168.1.164 -s random-words
 ```
 
 ## *SERVE*
 
-Host your own terminordle server. The default host is 'localhost' and the default port is `8080`. See [data policy](#data-privacy) below.
+Host your own terminordle server. The default host is '::', or 'localhost' and the default port is `8080`. See [data policy](#data-privacy) below. The app will create a logfile by default so as to enable some monitoring of the app by default. You can disable logs by setting `--logfile /dev/null`.
 
 The terminordle server is based on [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and implements a standard [websockets/ws](https://github.com/websockets/ws) message broker. This server is implemented on a "trust-free" model and tries to restrict user interaction to the barest minimum necessary for multiplayer wordle play.
 
@@ -115,12 +135,19 @@ This application uses no external database and manages all user and session data
 
 Client input is validated client side and again server side before being processed. The risk of injection exists, but the only user input that should be able to be printed is a five-letter `[a-zA-Z]` guess. This is checked against wordlists and must meet other criteria limiting its ability to contain malicious strings. Please submit an issue or pr if you find security problems.
 
-Example:
+**Examples:**
 
 ```bash
 terminordle serve
-# change the port with
+
+# change the port (default 8080)
 terminordle serve 7357
+
+# change the host (default 0.0.0.0 or ::)
+terminordle serve -h 192.168.1.164 7357
+
+# change the logfile path
+terminordle serve -l /tmp/logfile.jsonl
 ```
 
 ## gameplay

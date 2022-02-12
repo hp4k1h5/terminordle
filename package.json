@@ -3,12 +3,14 @@
   "version": "0.0.11",
   "license": "MIT",
   "scripts": {
-    "help": "terminordle --help",
-    "play": "terminordle play",
-    "join": "terminordle join",
-    "serve": "terminordle serve",
+    "help": "yarn dev --help",
+    "play": "yarn dev play",
+    "join": "yarn dev join",
+    "serve": "yarn dev serve",
     "test": "mocha -r ts-node/register 'tests/**/*.*'",
-    "build": "tsc"
+    "dev": "yarn build && node dist/src/cli/index.js",
+    "build": "rm -rf dist/ && tsc && cp -r dist_data dist",
+    "pub": "yarn build && npm publish --access public"
   },
   "bin": {
     "terminordle": "dist/src/cli/index.js"

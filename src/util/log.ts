@@ -21,7 +21,7 @@ export class Log {
   filepath: string
   logger
   reader
-  constructor(relPath = '/tmp/terminordle-log.jsonl', overwrite = true) {
+  constructor(relPath: string, overwrite = true) {
     this.filepath = fp(relPath)
 
     this.logger = (function (_this: Log) {

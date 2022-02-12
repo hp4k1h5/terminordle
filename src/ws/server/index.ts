@@ -24,9 +24,10 @@ const msgTypeToFn: {
 }
 
 const MAX_CNX = 1_000
-export function createWSS(port = 8080, log: Log) {
+export function createWSS(port = 8080, host = '0.0.0.0', log: Log | undefined) {
   const wss = new WebSocketServer({
     port,
+    host,
     backlog: 100,
     maxPayload: 256,
     clientTracking: true,
@@ -94,7 +95,7 @@ export function createWSS(port = 8080, log: Log) {
       return
     }
 
-    log.log({ connection: 'established', with: cnx.user_id })
+    log && log.log({ connection: 'established', with: cnx.user_id })
 
     // send user id back
     msg(cnx, {
