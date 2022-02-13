@@ -35,7 +35,6 @@ terminordle join not-aserver.notatld:8080 -s random-words`,
   )
   .option('-s, --session <session_id>', 'join session with id')
   .action(async (url, options) => {
-    console.log('join', options, url)
     const cnx = await requestSession(url, options.session)
     setSignals()
     await repl(cnx)
