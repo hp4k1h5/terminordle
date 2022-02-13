@@ -8,7 +8,7 @@ export { names } from './data/names'
 export { Log, Line } from './log'
 
 const file = fs.readFileSync(
-  path.join(__dirname, '../../dist_data/wordlist-5_5K.txt'),
+  path.join(__dirname, '../../dist_data/accepted_words_en.txt'),
   'utf8',
 )
 
