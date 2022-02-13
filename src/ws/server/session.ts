@@ -1,5 +1,3 @@
-import * as chalk from 'chalk'
-
 import {
   WS,
   Message,
@@ -20,11 +18,13 @@ export class Session {
   guests: User[]
   answer: string
   guesses: Row[]
+  reset_lock: boolean
   constructor(session_id: string) {
     this.session_id = session_id
     this.guests = []
     this.answer = 'ibudi'
     this.guesses = []
+    this.reset_lock = false
   }
 }
 
@@ -73,7 +73,7 @@ export function createSession(
     return
   }
 
-  const answer = selectAnswer(5)
+  const answer = selectAnswer()
   sessions[session_id].answer = answer
 
   const response: ClientMessage = {
@@ -107,8 +107,10 @@ function sessionId(): string {
   throw 'no session available'
 }
 
-function selectAnswer(length = 5) {
-  const filteredWordList = wordList.filter(word => word.length === length)
+const filteredWordList = wordList.filter(
+  word => word.length === 5 && /[a-z]/i.test(word),
+)
+function selectAnswer() {
   return getRand(filteredWordList)
 }
 
@@ -164,9 +166,10 @@ export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
     err(ws, 'no such session_id')
     return
   }
+
   const MAX_GUESSES = 20
   if (session.guesses.length >= MAX_GUESSES) {
-    endSession(ws, 'no more guesses')
+    endSession(ws, 'out of guesses (20)')
     return
   }
 
@@ -192,14 +195,49 @@ export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
       const winMsg = {
         ...message,
         type: ClientMsgType.again,
-        content: `${chalk.greenBright('correct! winner: ')}${ws.user_id}`,
+        content: ws.user_id,
       }
 
       msg(guest, winMsg)
       // TODO: rm
-      remove(guest, log)
+      // remove(guest, log)
     }
   })
+}
+
+export function again(cnx: WS, message: ServerMessage, log: Log | undefined) {
+  if (!message || typeof message.content !== 'string' || !cnx.session_id) {
+    remove(cnx)
+    return undefined
+  }
+  log && log.log({ again: message.content, user_id: cnx.user_id })
+
+  if (message.content === 'n') {
+    msg(cnx, {
+      type: ClientMsgType.info,
+      content: 'goodbye',
+    })
+    remove(cnx)
+    return
+  }
+
+  // get session
+  const session = sessions[cnx.session_id]
+
+  if (session.reset_lock) {
+    // another session member has reset the session
+    return
+  }
+
+  session.reset_lock = true
+
+  // reset answer
+  const answer = selectAnswer()
+  session.answer = answer
+  // reset guesses
+  session.guesses = []
+  log && log.log({ session_id: cnx.session_id, answer })
+  // TODO: reset reset_lock on correct guess
 }
 
 function endSession(cnx: WS, message: string) {

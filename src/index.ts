@@ -1,5 +1,5 @@
 //@ts-strict
-import { Visibility, Option, Row, Message } from './lib/structs'
+import { Visibility, Option, Row, ServerMessage } from './lib/structs'
 import { words, letters } from './util'
 
 export function wordToRow(word: string): Array<Option> {
@@ -9,7 +9,7 @@ export function wordToRow(word: string): Array<Option> {
   }))
 }
 
-export function validateResponse(response: Message): void {
+export function validateResponse(response: ServerMessage): void {
   if (!response.content || typeof response.content !== 'string') {
     throw 'bad guess'
   } else if (/[^a-z]/i.test(response.content)) {

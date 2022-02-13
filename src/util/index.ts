@@ -5,7 +5,7 @@ import * as path from 'path'
 import { Visibility } from '../lib/structs'
 
 export { names } from './data/names'
-export { Log } from './log'
+export { Log, Line } from './log'
 
 const file = fs.readFileSync(
   path.join(__dirname, '../../dist_data/wordlist-5_5K.txt'),

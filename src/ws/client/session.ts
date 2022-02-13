@@ -1,8 +1,9 @@
-//@ts-strict
 import { ServerMsgType, WS, Row, ClientMessage } from '../../lib/structs'
 import { createWS } from './'
 import { updateAlphabet } from '../../'
-import { display } from '../../cli/printer'
+import { display, MsgColors } from '../../cli/printer'
+import { setSignals } from '../../cli/'
+import { _rl, rl, question, repl, resetRl } from '../../cli/repl'
 import { msg } from './msg'
 
 export async function requestSession(
@@ -30,6 +31,31 @@ export function guess(cnx: WS, message: ClientMessage) {
   display.print()
 }
 
-export function again(cnx: WS, message: ClientMessage) {
-  
+export async function again(cnx: WS, message: ClientMessage) {
+  display.alterMessage(`WINNER: ${message['content']}!`, MsgColors['green'])
+  display.print()
+
+  // close readline
+  rl.close()
+
+  // open new realine
+  const again_rl = _rl()
+  const again_yn = await question('play again?   y/n', again_rl)
+  again_rl.close()
+
+  if (!/^(y|n)$/i.test(again_yn)) {
+    cnx.close()
+  }
+
+  msg(cnx, { type: ServerMsgType.again, content: again_yn })
+
+  if (again_yn === 'n') {
+    return
+  }
+
+  display.clear()
+
+  resetRl()
+  setSignals(cnx)
+  await repl(cnx)
 }

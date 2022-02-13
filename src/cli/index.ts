@@ -6,17 +6,18 @@ export { display, infoIndex, MsgColors } from './printer'
 export { repl } from './repl'
 import './args'
 
-export function setSignals() {
+export function setSignals(cnx: WS) {
   process.stdin.resume()
 
   // default
-  process.on('SIGINT', handleSig)
+  process.on('SIGINT', () => handleSig.apply(handleSig, [cnx]))
   // windows
-  process.on('SIGBREAK', handleSig)
+  process.on('SIGBREAK', () => handleSig.apply(handleSig, [cnx]))
 }
 
 function handleSig(cnx: WS) {
   console.log('closing connection')
+
   // tell server to clear connection
-  cnx.terminate()
+  cnx && cnx.terminate()
 }

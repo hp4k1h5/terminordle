@@ -1,4 +1,3 @@
-//@ts-strict
 import { WebSocket } from 'ws'
 import {
   WS,
@@ -67,7 +66,7 @@ export function createWS(url = URL): Promise<WS> {
       keep(ws)
     })
 
-    ws.on('message', function (data: string) {
+    ws.on('message', async function (data: string) {
       let message: ClientMessage | string
       try {
         message = validateMsg(ws, data)
@@ -76,7 +75,7 @@ export function createWS(url = URL): Promise<WS> {
       }
 
       try {
-        msgTypeToFn[message.type](ws, message)
+        await msgTypeToFn[message.type](ws, message)
       } catch (e) {
         console.error('action error', message, e) // TODO:
       }
@@ -88,7 +87,6 @@ export function createWS(url = URL): Promise<WS> {
     })
 
     ws.on('close', function () {
-      console.log('goodbye')
       process.exit(0)
     })
   })
