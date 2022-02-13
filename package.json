@@ -1,6 +1,6 @@
 {
   "name": "@hp4k1h5/terminordle",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "license": "MIT",
   "scripts": {
     "help": "yarn dev --help",
