@@ -18,6 +18,7 @@ export enum ClientMsgType {
   user_id = 'user_id',
   session_id = 'session_id',
   info = 'info',
+  again = 'again',
   guess = 'guess',
   error = 'error',
 }

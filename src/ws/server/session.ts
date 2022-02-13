@@ -1,4 +1,5 @@
-//@ts-strict
+import * as chalk from 'chalk'
+
 import {
   WS,
   Message,
@@ -190,11 +191,12 @@ export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
     if (correct) {
       const winMsg = {
         ...message,
-        type: MsgType.info,
-        content: `correct! winner: ${ws.user_id}`,
+        type: ClientMsgType.again,
+        content: `${chalk.greenBright('correct! winner: ')}${ws.user_id}`,
       }
 
       msg(guest, winMsg)
+      // TODO: rm
       remove(guest, log)
     }
   })

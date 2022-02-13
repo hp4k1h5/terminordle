@@ -1,5 +1,5 @@
 //@ts-strict
-import { MsgType, WS, Row, Message } from '../../lib/structs'
+import { ServerMsgType, WS, Row, ClientMessage } from '../../lib/structs'
 import { createWS } from './'
 import { updateAlphabet } from '../../'
 import { display } from '../../cli/printer'
@@ -15,17 +15,21 @@ export async function requestSession(
 
   // request session id
   if (!session_id) {
-    msg(ws, { type: MsgType.create, user_id: ws.user_id })
+    msg(ws, { type: ServerMsgType.create, user_id: ws.user_id })
   } else {
-    msg(ws, { type: MsgType.join, user_id: ws.user_id, session_id })
+    msg(ws, { type: ServerMsgType.join, user_id: ws.user_id, session_id })
   }
 
   return ws
 }
 
-export function guess(cnx: WS, message: Message) {
+export function guess(cnx: WS, message: ClientMessage) {
   updateAlphabet(message.content as Row)
 
   display.addToGuesses(message.content as Row)
   display.print()
+}
+
+export function again(cnx: WS, message: ClientMessage) {
+  
 }

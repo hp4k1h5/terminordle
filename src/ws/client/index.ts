@@ -1,21 +1,31 @@
 //@ts-strict
 import { WebSocket } from 'ws'
-import { WS, Message } from '../../lib/structs'
-import { guess } from './session'
+import {
+  WS,
+  Message,
+  ServerMessage,
+  ClientMessage,
+  ClientMsgType,
+} from '../../lib/structs'
+import { guess, again } from './session'
 import { display, infoIndex, MsgColors } from '../../cli'
 import { validateMsg } from './msg'
 export { requestSession } from './session'
 
 const URL = 'localhost'
 
-const msgTypeToFn = {
+const msgTypeToFn: {
+  [key in ClientMsgType]: (
+    ws: WS,
+    msg: ClientMessage,
+  ) => ServerMessage | void | Promise<void>
+} = {
   user_id: setUserId,
   session_id: setSessionId,
-  info: info,
-  error: error,
-  guess: guess,
-  create: () => null,
-  join: () => null,
+  info,
+  again,
+  error,
+  guess,
 }
 
 function error(ws: WS, data: string | Message) {
@@ -58,7 +68,7 @@ export function createWS(url = URL): Promise<WS> {
     })
 
     ws.on('message', function (data: string) {
-      let message: Message | string
+      let message: ClientMessage | string
       try {
         message = validateMsg(ws, data)
       } catch (e) {

@@ -45,12 +45,12 @@ program
   .command('serve')
   .description(`${b`serve`} terminordle on ${y`[port]`}`)
   .addArgument(new Argument('[port]', 'port to listen on').default(8080))
+  .option('-h, --host <host>', 'specify hostname', 'localhost')
   .option(
     '-l, --logfile [filepath]',
     'specify logfile path',
     '/tmp/terminordle-log.jsonl',
   )
-  .option('-h, --host <host>', 'specify hostname', 'localhost')
   .action((port, options) => {
     let log: Log | undefined
     if (options.logfile) {
