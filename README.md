@@ -6,6 +6,13 @@
 
 terminordle (pronounced "terminalordle") is inspired by the popular online game [wordle](https://www.powerlanguage.co.uk/wordle/) made for your terminal. You can play a pretty close replica of the original locally or multiplayer over the network.
 
+## changelog
+
+- **v0.0.13** 
+  - play again after winning (more persistent sessions)
+  - improved wordlist
+
+--- 
 
 <!-- vim-markdown-toc GFM -->
 
@@ -26,6 +33,8 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 
 <!-- vim-markdown-toc -->
 
+---
+
 ## install
 
 ### dependencies
@@ -37,9 +46,9 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 ### download app
 
 ```
-npm -g install terminordle
-# OR
 yarn global add @hP4k1h5/terminordle
+# OR
+npm -g install terminordle
 ```
 
 or clone this repo
@@ -58,11 +67,15 @@ yarn build # or # npm run build
 yarn link # or # npm link
 ```
 
+--- 
+
 ## HELP
 
 ```bash
 terminordle help
 ```
+
+---
 
 ## *PLAY*
 
@@ -123,6 +136,8 @@ terminordle join -s session-name
 terminordle join 192.168.1.164 -s random-words
 ```
 
+---
+
 ## *SERVE*
 
 Host your own terminordle server. The default host is '::', or 'localhost' and the default port is `8080`. See [data policy](#data-privacy) below. The app will create a logfile by default so as to enable some monitoring of the app by default. You can disable logs by setting `--logfile /dev/null`.
@@ -149,6 +164,8 @@ terminordle serve -h 192.168.1.164 7357
 # change the logfile path
 terminordle serve -l /tmp/logfile.jsonl
 ```
+
+---
 
 ## gameplay
 
