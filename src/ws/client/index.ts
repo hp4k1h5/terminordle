@@ -1,5 +1,6 @@
-//@ts-strict
 import { WebSocket } from 'ws'
+import * as chalk from 'chalk'
+
 import {
   WS,
   Message,
@@ -46,7 +47,11 @@ function setUserId(cnx: WS, message: Message) {
   }
 
   cnx.user_id = message.content
-  display.screen.splice(infoIndex(), 0, `user id: ${cnx.user_id}`)
+  display.screen.splice(
+    infoIndex(),
+    0,
+    `${chalk.cyanBright('user id: ')} ${cnx.user_id}`,
+  )
   display.print()
 }
 
@@ -54,7 +59,12 @@ function setSessionId(cnx: WS, message: Message) {
   if (cnx.session_id) return
   cnx.session_id = message.session_id
 
-  display.screen.splice(infoIndex() - 1, 0, `session id: ${cnx.session_id}`)
+  display.alterMessage('type a guess and hit enter ', MsgColors.bold)
+  display.screen.splice(
+    infoIndex() - 1,
+    0,
+    `${chalk.blueBright('session id:')} ${cnx.session_id}`,
+  )
   display.print()
 }
 
@@ -63,11 +73,10 @@ export function createWS(url = URL): Promise<WS> {
     const ws = new WebSocket(`ws://${url}`)
 
     ws.on('open', function () {
-      console.log('connection established with', ws.url)
       keep(ws)
     })
 
-    ws.on('message', function (data: string) {
+    ws.on('message', async function (data: string) {
       let message: ClientMessage | string
       try {
         message = validateMsg(ws, data)
@@ -76,7 +85,7 @@ export function createWS(url = URL): Promise<WS> {
       }
 
       try {
-        msgTypeToFn[message.type](ws, message)
+        await msgTypeToFn[message.type](ws, message)
       } catch (e) {
         console.error('action error', message, e) // TODO:
       }
@@ -88,7 +97,6 @@ export function createWS(url = URL): Promise<WS> {
     })
 
     ws.on('close', function () {
-      console.log('goodbye')
       process.exit(0)
     })
   })

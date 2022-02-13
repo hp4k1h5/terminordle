@@ -1,4 +1,3 @@
-//@ts-strict
 import { WS, ClientMessage, ServerMessage, MsgType } from '../../lib/structs'
 
 export function msg(cnx: WS, m: ServerMessage) {

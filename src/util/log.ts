@@ -15,7 +15,9 @@ export function fp(relPath: string) {
   return path.resolve(path.join(dirname, relPath))
 }
 
-type Line = { [key: string]: string | Date | AddressInfo | number | undefined }
+export type Line = {
+  [key: string]: string | Date | AddressInfo | number | undefined
+}
 
 export class Log {
   filepath: string

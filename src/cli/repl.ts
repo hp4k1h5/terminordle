@@ -1,30 +1,43 @@
-//@ts-strict
 import * as readline from 'readline'
 
-import { Row, MsgType, WS } from '../lib/structs'
+import { Row, ServerMsgType, WS } from '../lib/structs'
 import './args'
 import { wordToRow, validateResponse, evaluateGuess, isCorrect } from '../'
 import { display } from './printer'
 import { msg } from '../ws/client/msg'
 import { getRand, words } from '../util'
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-})
-rl.on('close', function () {
-  process.exit(0)
-})
+export const _rl = function () {
+  return readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  })
+}
 
-export async function question(query: string): Promise<string> {
+// const ac = new AbortController()
+// const signal = ac.signal
+
+export let rl = _rl()
+
+export function resetRl() {
+  // ac.abort()
+  rl = _rl()
+}
+
+// rl.on('close', function () {
+// })
+
+export async function question(query: string, rl_ = rl): Promise<string> {
   return new Promise(keep => {
-    rl.question(query, function (answer) {
+    rl_.question(query, function (answer) {
       keep(answer)
     })
   })
 }
 
 const wordList = Object.keys(words)
+
+// returns main event loop for player interaction
 export async function repl(cnx: WS | undefined = undefined) {
   let answer
   if (!cnx) {
@@ -42,7 +55,7 @@ export async function repl(cnx: WS | undefined = undefined) {
     let response: string
     try {
       response = await question('')
-      validateResponse({ type: MsgType.guess, content: response })
+      validateResponse({ type: ServerMsgType.guess, content: response })
     } catch (e) {
       display.alterMessage(e as string)
       continue
@@ -53,7 +66,7 @@ export async function repl(cnx: WS | undefined = undefined) {
     // handle network connections
     if (cnx) {
       msg(cnx, {
-        type: MsgType.guess,
+        type: ServerMsgType.guess,
         content: response,
         user_id: cnx.user_id,
         session_id: cnx.session_id,

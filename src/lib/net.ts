@@ -12,6 +12,7 @@ export enum ServerMsgType {
   create = 'create',
   join = 'join',
   guess = 'guess',
+  again = 'again',
 }
 
 export enum ClientMsgType {

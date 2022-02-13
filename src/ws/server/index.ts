@@ -1,4 +1,3 @@
-//@ts-strict
 import { WebSocketServer } from 'ws'
 import {
   WS,
@@ -8,7 +7,7 @@ import {
   ServerMessage,
 } from '../../lib/structs'
 import { validateMsg, msg, err } from './msg'
-import { remove, createSession, join, guess } from './session'
+import { remove, createSession, join, guess, again } from './session'
 import { getRand, names, Log } from '../../util'
 
 const msgTypeToFn: {
@@ -21,6 +20,7 @@ const msgTypeToFn: {
   create: createSession,
   join: join,
   guess: guess,
+  again,
 }
 
 const MAX_CNX = 1_000
