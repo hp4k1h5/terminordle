@@ -1,6 +1,6 @@
 {
   "name": "@hp4k1h5/terminordle",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "license": "MIT",
   "scripts": {
     "help": "yarn dev --help",
@@ -38,8 +38,7 @@
     "mocha": "^9.2.0",
     "prettier": "^2.5.1",
     "ts-node": "^10.5.0",
-    "typescript": "^4.5.5",
-    "typescript-strict-plugin": "^2.0.0-beta.1"
+    "typescript": "^4.5.5"
   },
   "files": [
     "src/**/*",
