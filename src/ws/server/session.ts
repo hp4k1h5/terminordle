@@ -148,7 +148,11 @@ export function join(ws: WS, message: Message): undefined {
   })
 }
 
-export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
+export function guess(
+  ws: WS,
+  message: ServerMessage,
+  log: Log | undefined,
+): undefined {
   try {
     validateResponse(message)
   } catch (e) {
@@ -167,12 +171,6 @@ export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
     return
   }
 
-  const MAX_GUESSES = 20
-  if (session.guesses.length >= MAX_GUESSES) {
-    endSession(ws, 'out of guesses (20)')
-    return
-  }
-
   const guess = wordToRow(message.content as string)
   evaluateGuess(guess, wordToRow(session.answer))
   session.guesses.push(guess)
@@ -187,6 +185,7 @@ export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
   const correct = isCorrect(guess)
   // game over free lock
   if (correct) session.reset_lock = false
+  const MAX_GUESSES = 2
 
   sessionGuests.forEach(guest => {
     // update client
@@ -198,9 +197,19 @@ export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
         ...message,
         type: ClientMsgType.again,
         content: ws.user_id,
+        user_id: ws.user_id,
       }
 
       msg(guest, winMsg)
+    } else if (session.guesses.length >= MAX_GUESSES) {
+      const lossMsg = {
+        type: ClientMsgType.again,
+        content: 'out of guesses (20)',
+      }
+      // update client
+      msg(guest, lossMsg)
+
+      return
     }
   })
 }
@@ -208,10 +217,11 @@ export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
 export function again(cnx: WS, message: ServerMessage, log: Log | undefined) {
   if (!message || typeof message.content !== 'string' || !cnx.session_id) {
     remove(cnx, log)
+
     return undefined
   }
 
-  if (message.content !== 'y') {
+  if (!/^y/i.test(message.content)) {
     msg(cnx, {
       type: ClientMsgType.info,
       content: 'goodbye',
@@ -244,19 +254,19 @@ export function again(cnx: WS, message: ServerMessage, log: Log | undefined) {
   session.reset_lock = true
   // reset_lock is freed by win/loss condition
 
-  // TODO: again for loss condition
-
   // reset answer
   const answer = selectAnswer()
-
   session.answer = answer
+
   // reset guesses
   session.guesses = []
 
   log && log.log({ session_id: cnx.session_id, answer })
+
+  // client side reset is handled client side on decision
 }
 
-function endSession(cnx: WS, message: string) {
+export function endSession(cnx: WS, message: string) {
   if (!cnx.session_id) return
   const session = sessions[cnx.session_id]
   if (!session) {
@@ -269,7 +279,6 @@ function endSession(cnx: WS, message: string) {
   // boot all session guests from server
   const guests = getGuests(session)
   guests.forEach(guest => {
-    err(guest, message)
     remove(guest)
   })
 }

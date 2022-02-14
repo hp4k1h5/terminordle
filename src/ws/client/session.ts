@@ -2,7 +2,7 @@ import { ServerMsgType, WS, Row, ClientMessage } from '../../lib/structs'
 import { createWS } from './'
 import { updateAlphabet } from '../../'
 import { display, MsgColors } from '../../cli/printer'
-import { _rl, rl, question, repl, resetRl } from '../../cli/repl'
+import { _rl, rl, question, repl } from '../../cli/repl'
 import { msg } from './msg'
 
 export async function requestSession(
@@ -34,7 +34,15 @@ export function guess(cnx: WS, message: ClientMessage) {
 }
 
 export async function again(cnx: WS, message: ClientMessage) {
-  display.alterMessage(`WINNER: ${message['content']}!`, MsgColors['green'])
+  if (message.user_id) {
+    display.alterMessage(`WINNER: ${message['user_id']}!`, MsgColors['green'])
+  } else {
+    display.alterMessage(
+      `GAME OVER: ${message['content']}!`,
+      MsgColors.redBright,
+    )
+  }
+
   display.print()
 
   // close readline
@@ -48,18 +56,13 @@ export async function again(cnx: WS, message: ClientMessage) {
 
   again_rl.close()
 
-  if (!/^(y|n)$/i.test(again_yn)) {
-    cnx.close()
-  }
-
   msg(cnx, { type: ServerMsgType.again, content: again_yn })
 
-  if (again_yn === 'n') {
+  if (!/^y/i.test(again_yn)) {
     return
   }
 
   display.clear(cnx.user_id, cnx.session_id)
-  resetRl()
 
   deciding = false
 

@@ -3,7 +3,7 @@ import { Command, Argument } from 'commander'
 import * as chalk from 'chalk'
 
 import { createWSS, requestSession } from '../ws'
-import { setSignals, repl } from '../cli'
+import { repl } from '../cli'
 import { Log } from '../util'
 import { version } from '../../package.json'
 
@@ -36,7 +36,6 @@ terminordle join not-aserver.notatld:8080 -s random-words`,
   .option('-s, --session <session_id>', 'join session with id')
   .action(async (url, options) => {
     const cnx = await requestSession(url, options.session)
-    setSignals(cnx)
     await repl(cnx)
   })
 
