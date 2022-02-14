@@ -185,7 +185,7 @@ export function guess(
   const correct = isCorrect(guess)
   // game over free lock
   if (correct) session.reset_lock = false
-  const MAX_GUESSES = 2
+  const MAX_GUESSES = 20
 
   sessionGuests.forEach(guest => {
     // update client
