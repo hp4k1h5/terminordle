@@ -207,19 +207,25 @@ export function guess(ws: WS, message: ServerMessage, log?: Log): undefined {
 
 export function again(cnx: WS, message: ServerMessage, log: Log | undefined) {
   if (!message || typeof message.content !== 'string' || !cnx.session_id) {
-    remove(cnx)
+    remove(cnx, log)
     return undefined
   }
-  log && log.log({ again: message.content, user_id: cnx.user_id })
 
-  if (message.content === 'n') {
+  if (message.content !== 'y') {
     msg(cnx, {
       type: ClientMsgType.info,
       content: 'goodbye',
     })
-    remove(cnx)
+    remove(cnx, log)
+
     return
   }
+
+  log &&
+    log.log({
+      again: message.content,
+      user_id: cnx.user_id,
+    })
 
   // get session
   const session = sessions[cnx.session_id]
