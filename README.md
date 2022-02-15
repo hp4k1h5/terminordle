@@ -20,6 +20,7 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 <!-- vim-markdown-toc GFM -->
 
 * [install](#install)
+  * [homebrew](#homebrew)
   * [dependencies](#dependencies)
   * [download app](#download-app)
 * [HELP](#help)
@@ -39,6 +40,17 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 ---
 
 ## install
+
+### homebrew
+
+If you are on a mac, you can use [homebrew](https://brew.sh/).
+
+```bash
+brew tap hp4k1h5/terminordle https://github.com/HP4k1h5/terminordle.git
+brew install terminordle
+```
+
+If you've already installed and created a global shell alias, unlink with `yarn global unlink @hp4k1h5/terminordle`. Otherwise follow the instructions below to install from source or another package manager.
 
 ### dependencies
 
