@@ -14,6 +14,14 @@ export const _rl = function () {
   })
 }
 
+// replace cursor if the player has entered text
+export function moveCursor() {
+  if (rl.getCursorPos().cols) {
+    rl.write(null, { ctrl: true, name: 'u' })
+    rl.write(null, { ctrl: true, name: 'y' })
+  }
+}
+
 export let rl: readline.Interface
 
 export function resetRl(cnx: WS) {

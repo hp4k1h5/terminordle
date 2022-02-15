@@ -4,8 +4,13 @@ import { ServerMsgType, WS, Row, ClientMessage } from '../../lib/structs'
 import { createWS } from './'
 import { updateAlphabet } from '../../'
 import { display, MsgColors } from '../../cli/printer'
-import { _rl, rl, question, repl } from '../../cli/repl'
+import { _rl, rl, question, repl, moveCursor } from '../../cli/repl'
 import { msg } from './msg'
+
+// let input_data = ''
+// process.stdin.on('data', function (input) {
+//   input_data += input // Reading input from STDIN
+// })
 
 export async function requestSession(
   address: string,
@@ -28,8 +33,10 @@ export async function requestSession(
 let deciding = false
 
 export function guess(cnx: WS, message: ClientMessage) {
-  if (deciding || !message.content || typeof message.content === 'string')
+  if (deciding || !message.content || typeof message.content === 'string') {
     return
+  }
+
   updateAlphabet(message.content.guess as Row)
 
   display.addToGuesses(message.content.guess as Row)
@@ -40,7 +47,10 @@ export function guess(cnx: WS, message: ClientMessage) {
       } remaining`,
     ),
   )
+
   display.print()
+  // replace cursor
+  moveCursor()
 }
 
 export async function again(cnx: WS, message: ClientMessage) {
