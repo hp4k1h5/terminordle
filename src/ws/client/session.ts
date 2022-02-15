@@ -1,3 +1,5 @@
+import * as chalk from 'chalk'
+
 import { ServerMsgType, WS, Row, ClientMessage } from '../../lib/structs'
 import { createWS } from './'
 import { updateAlphabet } from '../../'
@@ -26,10 +28,18 @@ export async function requestSession(
 let deciding = false
 
 export function guess(cnx: WS, message: ClientMessage) {
-  if (deciding) return
-  updateAlphabet(message.content as Row)
+  if (deciding || !message.content || typeof message.content === 'string')
+    return
+  updateAlphabet(message.content.guess as Row)
 
-  display.addToGuesses(message.content as Row)
+  display.addToGuesses(message.content.guess as Row)
+  display.alterMessage(
+    chalk.hex('#ffaf5f')(
+      `${message.content.rem} guess${
+        message.content.rem > 1 ? 'es' : ''
+      } remaining`,
+    ),
+  )
   display.print()
 }
 

@@ -31,7 +31,7 @@ export interface Message {
   type: MsgType
   user_id?: string
   session_id?: string
-  content?: string | Option[]
+  content?: string | { guess: Option[]; rem: number }
   log?: boolean
 }
 

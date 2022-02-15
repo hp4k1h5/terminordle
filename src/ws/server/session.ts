@@ -13,6 +13,8 @@ import { wss } from '../../cli/args'
 import { msg, err } from './msg'
 import { getRand, names, words, Log } from '../../util'
 
+const MAX_GUESSES = 20
+
 export class Session {
   session_id: string
   guests: User[]
@@ -143,15 +145,18 @@ export function join(ws: WS, message: Message): undefined {
   msg(ws, response)
 
   // replay guesses back to client
-  sessions[message.session_id].guesses.forEach(guess => {
-    msg(ws, { type: MsgType.guess, content: guess })
+  sessions[message.session_id].guesses.forEach((guess, i) => {
+    msg(ws, {
+      type: MsgType.guess,
+      content: { guess, rem: MAX_GUESSES - (i + 1) },
+    })
   })
 }
 
 export function guess(
   ws: WS,
   message: ServerMessage,
-  log: Log | undefined,
+  // log: Log | undefined,
 ): undefined {
   try {
     validateResponse(message)
@@ -179,13 +184,12 @@ export function guess(
   const sessionGuests = getGuests(session)
   const response: ClientMessage = {
     type: ClientMsgType.guess,
-    content: guess,
+    content: { guess, rem: MAX_GUESSES - session.guesses.length },
   }
 
   const correct = isCorrect(guess)
   // game over free lock
   if (correct) session.reset_lock = false
-  const MAX_GUESSES = 20
 
   sessionGuests.forEach(guest => {
     // update client
@@ -243,8 +247,11 @@ export function again(cnx: WS, message: ServerMessage, log: Log | undefined) {
   // another session member has reset the session
   if (session.reset_lock && cnx.session_id) {
     // replay guesses back to client
-    session.guesses.forEach(guess => {
-      msg(cnx, { type: MsgType.guess, content: guess })
+    session.guesses.forEach((guess, i) => {
+      msg(cnx, {
+        type: MsgType.guess,
+        content: { guess, rem: MAX_GUESSES - (i + 1) },
+      })
     })
 
     return
