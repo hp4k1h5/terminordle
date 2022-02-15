@@ -22,11 +22,11 @@ program
 program
   .command('join')
   .description(
-    `${b`join`} ${y`[url]`} -s ${y`<session_id>`} or leave blank to create new
-Exs:
-terminordle join
-terminordle join terminordle.fun -s session-name
-terminordle join not-aserver.notatld:8080 -s random-words`,
+    `${b`join`} ${y`[url]`} -s ${y`<session_id>`} or leave blank to create new. Ex:
+          terminordle join
+          terminordle join terminordle.fun -s session-name
+          terminordle join not-aserver.notatld:8080 -s random-words
+`,
   )
   .addArgument(
     new Argument('[url]', 'location of the terminordle server').default(
@@ -42,7 +42,12 @@ terminordle join not-aserver.notatld:8080 -s random-words`,
 export let wss: WebSocketServer
 program
   .command('serve')
-  .description(`${b`serve`} terminordle on ${y`[port]`}`)
+  .description(
+    `${b`serve`} terminordle on ${y`[port]`} Ex:
+          terminordle serve
+          terminordle serve -h localhost 8080
+`,
+  )
   .addArgument(new Argument('[port]', 'port to listen on').default(8080))
   .option('-h, --host <host>', 'specify hostname', 'localhost')
   .option(
@@ -57,11 +62,11 @@ program
     }
     wss = createWSS(port, options.host, log)
 
-    setImmediate(() => {
+    setTimeout(() => {
       console.log('serving...', wss.address())
       console.log('see log @', options.logfile)
       log && log.log({ 'serving...': wss.address() })
-    })
+    }, 10)
   })
 
 program.parse(process.argv)
