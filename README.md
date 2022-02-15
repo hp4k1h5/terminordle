@@ -186,8 +186,6 @@ terminordle serve -l /tmp/logfile.jsonl
 
 Standard wordle rules mostly apply (mostly, submit an issue if there are discrepancies). Some deviations include the use of different sets of word lists, both for answers and guesses, more allowed guesses (currently 20), and multiplayer free-for-all mode.
 
-The session is terminated on win or loss to free up server space. Play again if there is capacity.
-
 ## data privacy
 
 This application makes no attempts to log or store or analyze any user data with the non-exclusive list of exceptions below. These exceptions should only apply if you are using the application in network (multiplayer) mode, and you are connecting to a server managed by [@HP4k1h5](https://github.com/HP4k1h5). If you are using it locally, this app collects no data. In other cases, this software and its contributing authors make NO claims as to the reliability of service, or safety of connecting to any server not managed by @HP4k1h5, or the integrity of data privacy guarantees offered by those providers. Other servers may be running modified or corrupted versions of this software or may have other data privacy policies that are not in alignment with those expressed here.
