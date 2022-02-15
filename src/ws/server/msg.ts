@@ -15,7 +15,7 @@ export function msg(cnx: WS, m: ClientMessage) {
 export function err(cnx: WS, e: string | unknown, log: false | Log = false) {
   if (typeof e !== 'string') return
 
-  log && log.log({ [MsgType.error]: e, date_utc: new Date().toJSON() })
+  log && log.log({ [MsgType.error]: e })
 }
 
 export function validateMsg(cnx: WS, data: string) {

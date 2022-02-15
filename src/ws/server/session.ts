@@ -116,10 +116,13 @@ function selectAnswer() {
   return getRand(filteredWordList)
 }
 
-export function join(ws: WS, message: Message): undefined {
+export function join(ws: WS, message: Message): void {
   if (!message || !message.session_id || !sessions[message.session_id]) {
-    err(ws, `no such session id ${message.session_id}`)
-    return
+    const e = `no such session id ${message.session_id}`
+    msg(ws, { type: MsgType.error, content: e })
+    ws.close()
+
+    throw e
   }
 
   const response: ClientMessage = {
