@@ -46,6 +46,13 @@ export function remove(ws: WS, log?: Log) {
         clients: wss.clients.size,
       })
   }
+  const guests = getGuests(userSession)
+  guests.forEach(guest => {
+    msg(guest, {
+      type: ClientMsgType.info,
+      content: `${ws.user_id} has left the game`,
+    })
+  })
 
   // delete session if empty
   if (userSession && userSession.guests.length === 0) {
@@ -146,6 +153,12 @@ export function join(ws: WS, message: Message): void {
   ws.session_id = message.session_id
   // send session_id
   msg(ws, response)
+
+  // update other players
+  const guests = getGuests(sessions[response.session_id])
+  guests.forEach(guest => {
+    msg(guest, { type: MsgType.info, content: `${ws.user_id} joined!` })
+  })
 
   // replay guesses back to client
   sessions[message.session_id].guesses.forEach((guess, i) => {

@@ -8,9 +8,12 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 
 ## changelog
 
-- **v0.0.13** 
-  - play again after winning (more persistent sessions)
-  - improved wordlist
+- **v0.1.0** 
+  - fix cursor bug (restore pending guess)
+  - fix session bug 
+  - show info on player join/quit
+  - show remaining guesses
+  - breaking api changes if you use server as API (see [./src/lib/net.ts](./src/lib/net.ts))
 
 --- 
 
