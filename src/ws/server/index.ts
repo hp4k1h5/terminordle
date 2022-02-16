@@ -24,13 +24,21 @@ const msgTypeToFn: {
 }
 
 const MAX_CNX = 1_000
-export function createWSS(port = 8080, host = '0.0.0.0', log: Log | undefined) {
+export function createWSS(
+  port = 8080,
+  host = 'localhost',
+  log: Log | undefined,
+) {
   const wss = new WebSocketServer({
     port,
     host,
     backlog: 100,
     maxPayload: 256,
     clientTracking: true,
+  })
+
+  wss.on('error', function (e) {
+    log && log.log({ err: e.toString() })
   })
 
   // heartbeat
@@ -57,6 +65,10 @@ export function createWSS(port = 8080, host = '0.0.0.0', log: Log | undefined) {
       cnx.close()
       return
     }
+
+    cnx.on('error', e => {
+      log && log.log({ err: e.toString(), user_id: cnx.user_id })
+    })
 
     cnx.on('close', function () {
       remove(cnx, log)
