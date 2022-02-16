@@ -2,6 +2,7 @@ import * as chalk from 'chalk'
 
 import { Visibility, Option, Row } from '../lib/structs'
 import { letters } from '../util'
+import { rl } from './repl'
 
 const optColorMap = {
   [Visibility.hidden]: chalk.bgWhite,
@@ -34,7 +35,9 @@ export function typesetAlphabet(reset = false): string {
 
 class Display {
   screen: string[]
+  count: number
   constructor() {
+    this.count = 0
     this.screen = [
       chalk.greenBright('Welcome to terminordle'),
       `>> ${' '.repeat(20)} <<`,
