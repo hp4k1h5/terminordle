@@ -26,6 +26,7 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 
 * [install](#install)
   * [homebrew](#homebrew)
+    * [fixing alias](#fixing-alias)
   * [dependencies](#dependencies)
   * [download app](#download-app)
 * [HELP](#help)
@@ -57,7 +58,16 @@ brew tap --force-auto-update hp4k1h5/terminordle https://github.com/HP4k1h5/term
 brew install terminordle
 ```
 
-If you've already installed and created a global shell alias, unlink with `yarn global unlink @hp4k1h5/terminordle`. Otherwise follow the instructions below to install from source or another package manager.
+#### fixing alias
+<details>
+  <summary>**path issues, install, uninstall, etc. ...**</summary>
+- If you've already installed and created a global shell alias, unlink with `yarn global unlink @hp4k1h5/terminordle`. Otherwise follow the instructions below to install from source or another package manager. 
+
+- If you installed with brew but without the `--force-update` flag, you can simply run the two above commands again and that should provide an automatically updateable install.
+
+</details>
+
+---
 
 ### dependencies
 
@@ -109,9 +119,11 @@ if you installed globally (`npm -g install @hP4k1h5/terminordle` / `yarn global 
 terminordle play
 ```
 
+---
+
 ### remote multiplayer
 
-To start or join a multiplayer session you must know the address of a running terminordle server. See [serve](#serve). I currently have one running at 174.138.46.61:8080. If the server is up and not overloaded, you can use it for your multiplayer sessions, or you can host your own. See [data policy](#data-privacy) below.
+To start or join a multiplayer session you must know the address of a running terminordle server. See [#serve](#serve). I currently have one running at `http://terminordle.fun`. If the server is up and not overloaded, you can use it for your multiplayer sessions, or you can [host your own](#serve). See [data policy](#data-privacy) below.
 
 The key command is `join`.
 
@@ -137,12 +149,13 @@ session id: session-name
 user id: Yong
 >>                      <<
 abcdefghijklmnopqrstuvwxyz
-
+▓ 
 ```
 
 > If you git cloned the app and haven't `yarn link`ed you can `cd` into the repo and replace `terminordle` in the previous commands with `npx terminordle`.
 
 ##### user ids
+
 The user id is chosen from the top one thousand most common names on Earth. The session-name is composed of two words chosen randomly from the word list. Share it with your friends and they can use it as [shown below](#join-session)
 
 #### join existing session
@@ -156,6 +169,7 @@ terminordle join -s session-name
 
 # or if you are joining another server
 terminordle join 192.168.1.164 -s random-words
+terminordle join 192.168.1.164:8080 -s random-words
 ```
 
 ---
@@ -184,7 +198,7 @@ terminordle serve 7357
 terminordle serve -h 192.168.1.164 7357
 
 # change the logfile path
-terminordle serve -l /tmp/logfile.jsonl
+terminordle serve -l /tmp/logfile.jsonl 80
 ```
 
 ---
