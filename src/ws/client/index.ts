@@ -10,6 +10,7 @@ import {
 } from '../../lib/structs'
 import { guess, again } from './session'
 import { display, infoIndex, MsgColors } from '../../cli'
+import { rl } from '../../cli/repl'
 import { validateMsg } from './msg'
 export { requestSession } from './session'
 
@@ -37,7 +38,14 @@ function error(ws: WS, data: string | Message) {
 function info(cnx: WS, message: Message, color: MsgColors = MsgColors.green) {
   if (typeof message.content === 'string') {
     display.alterMessage(message.content, color)
+
+    let replace = false
+    if (rl.getCursorPos().cols) replace = true
+    if (replace) rl.write(null, { ctrl: true, name: 'u' })
+
     display.print()
+
+    if (replace) rl.write(null, { ctrl: true, name: 'y' })
   }
 }
 

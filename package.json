@@ -1,6 +1,6 @@
 {
   "name": "@hp4k1h5/terminordle",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "scripts": {
     "help": "yarn dev --help",
@@ -28,7 +28,7 @@
     "@types/chai": "^4.3.0",
     "@types/chalk": "^2.2.0",
     "@types/mocha": "^9.1.0",
-    "@types/node": "^17.0.17",
+    "@types/node": "^17.0.18",
     "@types/ws": "^8.2.2",
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.11.0",

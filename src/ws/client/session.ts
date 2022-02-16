@@ -4,7 +4,7 @@ import { ServerMsgType, WS, Row, ClientMessage } from '../../lib/structs'
 import { createWS } from './'
 import { updateAlphabet } from '../../'
 import { display, MsgColors } from '../../cli/printer'
-import { _rl, rl, question, repl, moveCursor } from '../../cli/repl'
+import { resetRl, rl, question, repl } from '../../cli/repl'
 import { msg } from './msg'
 
 // let input_data = ''
@@ -48,9 +48,14 @@ export function guess(cnx: WS, message: ClientMessage) {
     ),
   )
 
+  // replace cursor text
+  let replace = false
+  if (rl.getCursorPos().cols) replace = true
+  if (replace) rl.write(null, { ctrl: true, name: 'u' })
+
   display.print()
-  // replace cursor
-  moveCursor()
+
+  if (replace) rl.write(null, { ctrl: true, name: 'y' })
 }
 
 export async function again(cnx: WS, message: ClientMessage) {
@@ -71,20 +76,22 @@ export async function again(cnx: WS, message: ClientMessage) {
   deciding = true
 
   // open new realine
-  const again_rl = _rl()
+  const again_rl = resetRl(cnx)
   const again_yn = await question('play again?  y/n ', again_rl)
 
   again_rl.close()
 
+  // send response
   msg(cnx, { type: ServerMsgType.again, content: again_yn })
 
   if (!/^y/i.test(again_yn)) {
     return
   }
 
+  // reset screen
   display.clear(cnx.user_id, cnx.session_id)
-
   deciding = false
 
+  // start a new repl
   await repl(cnx)
 }

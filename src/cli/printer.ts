@@ -51,25 +51,30 @@ class Display {
   }
 
   clear(user_id: string | undefined, session_id: string | undefined) {
+    // reset screen
     this.screen = [
-      chalk.greenBright('Welcome back to terminordle'),
+      chalk.greenBright('     terminordle'),
       `${chalk.blueBright('session id:')} ${session_id}`,
       `${chalk.cyanBright('user id: ')} ${user_id}`,
       `>> ${' '.repeat(20)} <<`,
       typesetAlphabet(true),
     ]
+
+    // clear info message
     this.alterMessage()
   }
 
   alterMessage(message = '', color: MsgColors = MsgColors['redBright']) {
-    this.screen[this.screen.findIndex(line => /^>>/.test(line))] = `>> ${chalk[
-      color
-    ](message)}${' '.repeat(Math.max(21 - message.length, 0))}<<`
+    const infoInd = infoIndex()
+
+    this.screen[infoInd] = `>> ${chalk[color](message)}${' '.repeat(
+      Math.max(21 - message.length, 0),
+    )}<<`
   }
 
   print() {
     console.clear()
-    this.screen.forEach(line => process.stdout.write(line + '\n'))
+    process.stdout.write(this.screen.join('\n') + '\n')
   }
 }
 

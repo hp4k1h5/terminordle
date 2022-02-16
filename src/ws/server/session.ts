@@ -13,6 +13,8 @@ import { wss } from '../../cli/args'
 import { msg, err } from './msg'
 import { getRand, names, words, Log } from '../../util'
 
+export const sessions: { [key: string]: Session } = {}
+
 const MAX_GUESSES = 20
 
 export class Session {
@@ -32,20 +34,24 @@ export class Session {
 
 export function remove(ws: WS, log?: Log) {
   if (!ws.session_id) return
-  const userSession = sessions[ws.session_id]
 
-  if (userSession && userSession.guests) {
-    userSession.guests.splice(
-      userSession.guests.findIndex(guest => guest.id === ws.user_id),
-      1,
-    )
-    log &&
-      log.log({
-        removing: ws.user_id,
-        from: ws.session_id,
-        clients: wss.clients.size,
-      })
-  }
+  const userSession = sessions[ws.session_id]
+  if (!userSession || !userSession.guests) return
+
+  const userIndex = userSession.guests.findIndex(
+    guest => guest.id === ws.user_id,
+  )
+  if (userIndex === -1) return
+
+  userSession.guests.splice(userIndex, 1)
+
+  log &&
+    log.log({
+      removing: ws.user_id,
+      from: ws.session_id,
+      clients: wss.clients.size,
+    })
+
   const guests = getGuests(userSession)
   guests.forEach(guest => {
     msg(guest, {
@@ -81,6 +87,7 @@ export function createSession(
   } catch (e) {
     return
   }
+  sessions[session_id] = new Session(session_id)
 
   const answer = selectAnswer()
   sessions[session_id].answer = answer
@@ -97,7 +104,6 @@ export function createSession(
 }
 
 const wordList = Object.keys(words)
-export const sessions: { [key: string]: Session } = {}
 
 function sessionId(): string {
   let id
@@ -125,37 +131,35 @@ function selectAnswer() {
 
 export function join(ws: WS, message: Message): void {
   if (!message || !message.session_id || !sessions[message.session_id]) {
-    const e = `no such session id ${message.session_id}`
-    msg(ws, { type: MsgType.error, content: e })
+    const e = {
+      type: MsgType.error,
+      content: `no such session id ${message.session_id}, ${ws.user_id}`,
+    }
+    msg(ws, e)
     ws.close()
 
     throw e
   }
 
-  const response: ClientMessage = {
-    type: MsgType.session_id,
-    user_id: message.user_id,
-  }
+  const session = sessions[message.session_id]
 
-  // limit users to one session per user
-  const userSession = Object.values(sessions).find((session: Session) =>
-    session.guests.find(guest => guest.id === message.user_id),
-  )
-
-  if (!userSession) {
-    sessions[message.session_id].guests.push({ id: ws.user_id } as User)
-    response.session_id = message.session_id
-  } else {
-    response.session_id = userSession.session_id
-  }
+  // add guess to session
+  session.guests.push({ id: ws.user_id } as User)
 
   // update ws
   ws.session_id = message.session_id
-  // send session_id
+
+  // send session id confirmation
+  const response: ClientMessage = {
+    type: MsgType.session_id,
+    user_id: message.user_id,
+    session_id: message.session_id,
+    content: message.session_id,
+  }
   msg(ws, response)
 
   // update other players
-  const guests = getGuests(sessions[response.session_id])
+  const guests = getGuests(sessions[message.session_id])
   guests.forEach(guest => {
     msg(guest, { type: MsgType.info, content: `${ws.user_id} joined!` })
   })
