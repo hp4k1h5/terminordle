@@ -3,7 +3,7 @@ import * as readline from 'readline'
 import { Row, ServerMsgType, WS } from '../lib/structs'
 import './args'
 import { wordToRow, validateResponse, evaluateGuess, isCorrect } from '../'
-import { display } from './printer'
+import { display, MsgColors } from './printer'
 import { msg } from '../ws/client/msg'
 import { getRand, words } from '../util'
 
@@ -12,14 +12,6 @@ export const _rl = function () {
     input: process.stdin,
     output: process.stdout,
   })
-}
-
-// replace cursor if the player has entered text
-export function moveCursor() {
-  if (rl.getCursorPos().cols) {
-    rl.write(null, { ctrl: true, name: 'u' })
-    rl.write(null, { ctrl: true, name: 'y' })
-  }
 }
 
 export let rl: readline.Interface
@@ -33,7 +25,7 @@ export function resetRl(cnx: WS) {
     cnx && cnx.terminate()
 
     // update player
-    display.alterMessage('goodbye')
+    display.alterMessage('goodbye', MsgColors.green)
     display.print()
 
     // exit

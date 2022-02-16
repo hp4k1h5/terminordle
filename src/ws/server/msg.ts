@@ -3,7 +3,6 @@ import {
   WS,
   ServerMessage,
   ClientMessage,
-  MsgType,
   ServerMsgType,
 } from '../../lib/structs'
 import { Log } from '../../util'
@@ -12,10 +11,11 @@ export function msg(cnx: WS, m: ClientMessage) {
   cnx.send(JSON.stringify(m))
 }
 
-export function err(cnx: WS, e: string | unknown, log: false | Log = false) {
-  if (typeof e !== 'string') return
-
-  log && log.log({ [MsgType.error]: e })
+export function err(cnx: WS, err: string | Error, log: false | Log = false) {
+  if (err instanceof Error) {
+    err = err.toString()
+  }
+  log && log.log({ err })
 }
 
 export function validateMsg(cnx: WS, data: string) {
