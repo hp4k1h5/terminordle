@@ -51,7 +51,9 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 If you are on a mac, you can use [homebrew](https://brew.sh/).
 
 ```bash
-brew tap hp4k1h5/terminordle https://github.com/HP4k1h5/terminordle.git
+# tap repo
+brew tap --force-auto-update hp4k1h5/terminordle https://github.com/HP4k1h5/terminordle.git
+# install
 brew install terminordle
 ```
 
