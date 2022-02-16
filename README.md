@@ -4,9 +4,14 @@
 
 ![screenshot of local terminordle single player](./dist_data/terminordle.png)
 
-terminordle (pronounced "terminalordle") is inspired by the popular online game [wordle](https://www.powerlanguage.co.uk/wordle/) made for your terminal. You can play a pretty close replica of the original locally or multiplayer over the network.
+terminordle (pronounced "terminalordle") is inspired by the popular online game [wordle](https://www.powerlanguage.co.uk/wordle/) made for your terminal. You can play a pretty close replica of the original locally or multiplayer over the network. **Now available through [brew](#homebrew).**
 
 ## changelog
+
+- **v0.1.1** 
+  - fix server message handling bug
+  - fix session bugs
+  - improved repl printing
 
 - **v0.1.0** 
   - fix cursor bug (restore pending guess)

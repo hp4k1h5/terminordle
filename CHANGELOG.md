@@ -2,6 +2,8 @@
 
 - **v0.1.1** 
   - fix server message handling bug
+  - fix session bugs
+  - improved repl printing
 
 - **v0.1.0** 
   - fix cursor bug (restore pending guess)
