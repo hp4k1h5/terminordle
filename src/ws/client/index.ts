@@ -1,3 +1,5 @@
+import { Agent } from 'https'
+
 import { WebSocket } from 'ws'
 import * as chalk from 'chalk'
 
@@ -78,7 +80,10 @@ function setSessionId(cnx: WS, message: Message) {
 
 export function createWS(url = URL): Promise<WS> {
   return new Promise(keep => {
-    const ws = new WebSocket(`ws://${url}`)
+    const ws = new WebSocket(`wss://${url}`, {
+      // servername: 'union.serux.pro',
+      agent: new Agent(),
+    })
 
     ws.on('open', function () {
       keep(ws)

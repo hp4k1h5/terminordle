@@ -1,4 +1,8 @@
+import * as fs from 'fs'
+import { createServer, Server } from 'https'
+
 import { WebSocketServer } from 'ws'
+
 import {
   WS,
   ClientMessage,
@@ -9,6 +13,16 @@ import {
 import { validateMsg, msg, err } from './msg'
 import { remove, createSession, join, guess, again } from './session'
 import { getRand, names, Log } from '../../util'
+
+const server: Server | undefined =
+  process.env.NODE_ENV === 'production'
+    ? createServer({
+        key: fs.readFileSync(
+          '/etc/letsencrypt/live/terminordle.fun/privkey.pem',
+        ),
+        cert: fs.readFileSync('/etc/letsencrypt/live/terminordle.fun/cert.pem'),
+      })
+    : undefined
 
 const msgTypeToFn: {
   [key in ServerMsgType]: (
@@ -30,6 +44,7 @@ export function createWSS(
   log: Log | undefined,
 ) {
   const wss = new WebSocketServer({
+    server,
     port,
     host,
     backlog: 100,
