@@ -1,8 +1,10 @@
 import * as fs from 'fs'
+import * as path from 'path'
 import { createServer, Server } from 'https'
 
 import * as dotenv from 'dotenv'
-dotenv.config()
+const p = path.resolve(__dirname, '../../../../.env')
+dotenv.config({ path: p })
 
 import { WebSocketServer } from 'ws'
 import {
