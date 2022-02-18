@@ -83,9 +83,7 @@ export function createWS(url: string): Promise<WS> {
   console.log(chalk.bgBlueBright(`connecting to ${url}`))
 
   return new Promise(keep => {
-    const ws = new WebSocket(url, {
-      agent: new Agent(),
-    })
+    const ws = new WebSocket(url)
 
     ws.on('open', function () {
       keep(ws)

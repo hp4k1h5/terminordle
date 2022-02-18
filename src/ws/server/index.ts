@@ -20,7 +20,7 @@ const server: Server | null =
   process.env.NODE_ENV === 'production'
     ? createServer({
         key: fs.readFileSync('' + process.env.SSL_KEY_PATH),
-        cert: fs.readFileSync('' + process.env.SSL_CERT_PATH),
+        cert: fs.readFileSync('' + process.env.SSL_FULLCHAIN_PATH),
       })
     : null
 
