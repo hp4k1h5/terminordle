@@ -8,17 +8,8 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 
 ## changelog
 
-- **v0.1.1** 
-  - fix server message handling bug
-  - fix session bugs
-  - improved repl printing
-
-- **v0.1.0** 
-  - fix cursor bug (restore pending guess)
-  - fix session bug 
-  - show info on player join/quit
-  - show remaining guesses
-  - breaking api changes if you use server as API (see [./src/lib/net.ts](./src/lib/net.ts))
+- **v0.1.3** 
+  - [wss support](#wss-support). Now supports secure connections
 
 --- 
 
@@ -37,6 +28,8 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
       * [user ids](#user-ids)
     * [join existing session](#join-existing-session)
 * [*SERVE*](#serve)
+  * [wss support](#wss-support)
+  * [overview](#overview)
 * [gameplay](#gameplay)
 * [data privacy](#data-privacy)
   * [possible data collection exceptions](#possible-data-collection-exceptions)
@@ -136,7 +129,7 @@ terminordle join
 
 terminordle join terminordle.fun
 
-terminordle join 174.138.46.61:80
+terminordle join 174.138.46.61:443
 ```
 
 The server should respond with your user id and session name. These are both randomly chosen and cannot be changed. They are ephemeral. Share the session id with a friend so they can use it as [shown below](#join-existing-session).
@@ -178,14 +171,6 @@ terminordle join 192.168.1.164:8080 -s random-words
 
 Host your own terminordle server. The default host is '::', or 'localhost' and the default port is `8080`. See [data policy](#data-privacy) below. The app will create a logfile by default so as to enable some monitoring of the app by default. You can disable logs by setting `--logfile /dev/null`.
 
-The terminordle server is based on [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and implements a standard [websockets/ws](https://github.com/websockets/ws) message broker. This server is implemented on a "trust-free" model and tries to restrict user interaction to the barest minimum necessary for multiplayer wordle play.
-
-This means that there are no accounts or long-lived users at all and the players are essentially limited to broadcasting guesses to their session. There is currently no authorization since there is virtually no user data at all, and *nothing is being stored or tracked anywhere by this app*. See [data privacy](#data-privacy).
-
-This application uses no external database and manages all user and session data in the node runtime memory. It currently limits concurrent connections to 1,000, and has other sensible settings for the WebSocketServer that restrict its memory and cpu footprint to (hopefully) the minimum necessary to serve hundreds of clients simultaneously. To be determined. Currently the security model of the app is to limit user input to session requests, join requests and guesses. That's all. Outgoing includes session metadata, guesses and error/info messages.
-
-Client input is validated client side and again server side before being processed. The risk of injection exists, but the only user input that should be able to be printed is a five-letter `[a-zA-Z]` guess. This is checked against wordlists and must meet other criteria limiting its ability to contain malicious strings. Please submit an issue or pr if you find security problems.
-
 **Examples:**
 
 ```bash
@@ -200,6 +185,34 @@ terminordle serve -h 192.168.1.164 7357
 # change the logfile path
 terminordle serve -l /tmp/logfile.jsonl 80
 ```
+
+### wss support
+
+1) Set the following env vars or add a `.env` file to the root directory of this repository, wherever that is found on your system. Use `terminordle whereami` to find a path. The .env should resemble the following with the paths changed to your own:
+
+```bash
+SSL_KEY_PATH="./path/to/key.key"
+SSL_CERT_PATH="./path/to/cert.cert"
+NODE_ENV=production # optional if you prefix the serve command
+```
+
+2) run with env prefix or add this to your .env
+```
+NODE_ENV=production terminordle serve 443
+NODE_ENV=production terminordle serve -h 0.0.0.0 443
+```
+
+This [blog](https://devcenter.heroku.com/articles/ssl-certificate-self) is a helpful guide to self-signed keys. And [letsencrypt](https://letsencrypt.org/getting-started/) can provide you with externally signed certificates.
+
+### overview
+
+The terminordle server is based on [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and implements a standard [websockets/ws](https://github.com/websockets/ws) message broker. This server is implemented on a "trust-free" model and tries to restrict user interaction to the barest minimum necessary for multiplayer wordle play.
+
+This means that there are no accounts or long-lived users at all and the players are essentially limited to broadcasting guesses to their session. There is currently no authorization since there is virtually no user data at all, and *nothing is being stored or tracked anywhere by this app*. See [data privacy](#data-privacy).
+
+This application uses no external database and manages all user and session data in the node runtime memory. It currently limits concurrent connections to 1,000, and has other sensible settings for the WebSocketServer that restrict its memory and cpu footprint to (hopefully) the minimum necessary to serve hundreds of clients simultaneously. To be determined. Currently the security model of the app is to limit user input to session requests, join requests and guesses. That's all. Outgoing includes session metadata, guesses and error/info messages.
+
+Client input is validated client side and again server side before being processed. The risk of injection exists, but the only user input that should be able to be printed is a five-letter `[a-zA-Z]` guess. This is checked against wordlists and must meet other criteria limiting its ability to contain malicious strings. Please submit an issue or pr if you find security problems.
 
 ---
 

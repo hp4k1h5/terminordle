@@ -1,6 +1,6 @@
 {
   "name": "@hp4k1h5/terminordle",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "license": "MIT",
   "scripts": {
     "help": "yarn dev --help",
@@ -22,6 +22,7 @@
   "dependencies": {
     "chalk": "4.1.2",
     "commander": "^9.0.0",
+    "dotenv": "^16.0.0",
     "ws": "^8.5.0"
   },
   "devDependencies": {

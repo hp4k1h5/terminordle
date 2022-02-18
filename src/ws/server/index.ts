@@ -1,28 +1,28 @@
 import * as fs from 'fs'
 import { createServer, Server } from 'https'
 
-import { WebSocketServer } from 'ws'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
+import { WebSocketServer } from 'ws'
 import {
   WS,
   ClientMessage,
-  MsgType,
-  ServerMsgType,
+  ClientMsgType,
   ServerMessage,
+  ServerMsgType,
 } from '../../lib/structs'
 import { validateMsg, msg, err } from './msg'
 import { remove, createSession, join, guess, again } from './session'
 import { getRand, names, Log } from '../../util'
 
-const server: Server | undefined =
+const server: Server | null =
   process.env.NODE_ENV === 'production'
     ? createServer({
-        key: fs.readFileSync(
-          '/etc/letsencrypt/live/terminordle.fun/privkey.pem',
-        ),
-        cert: fs.readFileSync('/etc/letsencrypt/live/terminordle.fun/cert.pem'),
+        key: fs.readFileSync('' + process.env.SSL_KEY_PATH),
+        cert: fs.readFileSync('' + process.env.SSL_CERT_PATH),
       })
-    : undefined
+    : null
 
 const msgTypeToFn: {
   [key in ServerMsgType]: (
@@ -43,14 +43,15 @@ export function createWSS(
   host = 'localhost',
   log: Log | undefined,
 ) {
-  const wss = new WebSocketServer({
-    server,
-    port,
+  const opts = {
     host,
     backlog: 100,
     maxPayload: 256,
     clientTracking: true,
-  })
+    ...(server ? { server } : { port }),
+  }
+
+  const wss = new WebSocketServer(opts)
 
   wss.on('error', function (e) {
     log && log.log({ err: e.toString() })
@@ -96,7 +97,7 @@ export function createWSS(
       try {
         message = validateMsg(cnx, data)
       } catch (e) {
-        msg(cnx, { type: MsgType.error, content: 'bad message' })
+        msg(cnx, { type: ClientMsgType.error, content: 'bad message' })
         err(cnx, e, log)
 
         return
@@ -126,11 +127,14 @@ export function createWSS(
 
     // send user id back
     msg(cnx, {
-      type: MsgType.user_id,
+      type: ClientMsgType.user_id,
       content: cnx.user_id,
       user_id: cnx.user_id,
     })
   })
+
+  // ssl support
+  server && server.listen(port)
 
   return wss
 }

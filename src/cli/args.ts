@@ -1,3 +1,5 @@
+import * as path from 'path'
+
 import { WebSocketServer } from 'ws'
 import { Command, Argument } from 'commander'
 import * as chalk from 'chalk'
@@ -66,7 +68,14 @@ program
       console.log('serving...', wss.address())
       console.log('see log @', options.logfile)
       log && log.log({ 'serving...': wss.address() })
-    }, 10)
+    }, 1000)
+  })
+
+program
+  .command('whereami')
+  .description('get full path of this app')
+  .action(() => {
+    console.log(path.dirname(path.join(__dirname, '../../')))
   })
 
 program.parse(process.argv)

@@ -3,8 +3,12 @@ yarn.lock
 
 dist/
 
-docs/
-
+# ignore dev data
 /data/
+
+# digital ocean
 digital_ocean_instructions.md
 cloud-config.yml
+
+# env
+.env
