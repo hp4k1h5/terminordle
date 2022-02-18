@@ -16,8 +16,6 @@ import { rl } from '../../cli/repl'
 import { validateMsg } from './msg'
 export { requestSession } from './session'
 
-const URL = 'localhost'
-
 const msgTypeToFn: {
   [key in ClientMsgType]: (
     ws: WS,
@@ -78,10 +76,14 @@ function setSessionId(cnx: WS, message: Message) {
   display.print()
 }
 
-export function createWS(url = URL): Promise<WS> {
+export function createWS(url: string): Promise<WS> {
+  if (!/^wss?:\/\//.test(url)) {
+    url = 'ws://' + url
+  }
+  console.log(chalk.bgBlueBright(`connecting to ${url}`))
+
   return new Promise(keep => {
-    const ws = new WebSocket(`wss://${url}`, {
-      // servername: 'union.serux.pro',
+    const ws = new WebSocket(url, {
       agent: new Agent(),
     })
 

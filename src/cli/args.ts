@@ -27,12 +27,12 @@ program
     `${b`join`} ${y`[url]`} -s ${y`<session_id>`} or leave blank to create new. Ex:
           terminordle join
           terminordle join terminordle.fun -s session-name
-          terminordle join not-aserver.notatld:8080 -s random-words
+          terminordle join wss://secserver.notld:8080 -s random-words
 `,
   )
   .addArgument(
     new Argument('[url]', 'location of the terminordle server').default(
-      'terminordle.fun',
+      'wss://terminordle.fun',
     ),
   )
   .option('-s, --session <session_id>', 'join session with id')

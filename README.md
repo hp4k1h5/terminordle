@@ -129,7 +129,9 @@ terminordle join
 
 terminordle join terminordle.fun
 
-terminordle join 174.138.46.61:443
+terminordle join wss://terminordle.fun
+
+terminordle join wss://174.138.46.61:443
 ```
 
 The server should respond with your user id and session name. These are both randomly chosen and cannot be changed. They are ephemeral. Share the session id with a friend so they can use it as [shown below](#join-existing-session).
@@ -165,6 +167,13 @@ terminordle join 192.168.1.164 -s random-words
 terminordle join 192.168.1.164:8080 -s random-words
 ```
 
+If the url you provide does not include a protocol, **`ws://`** is used as the default. Prefix your address with `wss://` in order to communicate with a secure websocket connection. As of v0.1.3, `terminordle.fun` traffic is encrypted by [letsencrypt](https://letsencrypt.org/getting-started/).
+
+```bash
+terminordle join wss://secure.server:443
+terminordle join wss://secure.server -s session-name
+```
+
 ---
 
 ## *SERVE*
@@ -192,12 +201,13 @@ terminordle serve -l /tmp/logfile.jsonl 80
 
 ```bash
 SSL_KEY_PATH="./path/to/key.key"
-SSL_CERT_PATH="./path/to/cert.cert"
+SSL_FULLCHAIN_PATH="./path/to/fullchain.pem"
 NODE_ENV=production # optional if you prefix the serve command
 ```
 
 2) run with env prefix or add this to your .env
-```
+
+```bash
 NODE_ENV=production terminordle serve 443
 NODE_ENV=production terminordle serve -h 0.0.0.0 443
 ```
