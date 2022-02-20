@@ -1,16 +1,20 @@
+# ignore npm, yarn
 node_modules/
 yarn.lock
 
+# ignore ts build
 dist/
+*.tgz
 
 # ignore dev data
 /data/
 
-# digital ocean
+# ignore digital ocean
 digital_ocean_instructions.md
 cloud-config.yml
 
-# env
+# ignore env
 .env
 
+# ignore brew files
 brew_pub.bash
