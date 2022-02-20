@@ -1697,7 +1697,6 @@ daddy
 dados
 daffs
 daffy
-dagos
 daily
 dairy
 daisy
@@ -1863,7 +1862,6 @@ dines
 dingo
 dings
 dingy
-dinks
 dinky
 dints
 diode
@@ -2959,8 +2957,6 @@ goody
 gooey
 goofs
 goofy
-gooks
-gooky
 goons
 goony
 goops
@@ -6053,7 +6049,6 @@ salty
 salve
 salvo
 samba
-sambo
 samek
 samps
 sands

@@ -19,7 +19,8 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
   * [homebrew](#homebrew)
     * [fixing alias](#fixing-alias)
   * [dependencies](#dependencies)
-  * [download app](#download-app)
+  * [yarn & npm](#yarn--npm)
+  * [or clone this repo](#or-clone-this-repo)
 * [HELP](#help)
 * [*PLAY*](#play)
   * [local single player](#local-single-player)
@@ -53,7 +54,7 @@ brew install terminordle
 
 #### fixing alias
 <details>
-  <summary>**path issues, install, uninstall, etc. ...**</summary>
+  <summary>path issues, install, uninstall, etc. ...</summary>
 - If you've already installed and created a global shell alias, unlink with `yarn global unlink @hp4k1h5/terminordle`. Otherwise follow the instructions below to install from source or another package manager. 
 
 - If you installed with brew but without the `--force-update` flag, you can simply run the two above commands again and that should provide an automatically updateable install.
@@ -65,10 +66,13 @@ brew install terminordle
 ### dependencies
 
 - [nodeJs](https://nodejs.org/en/download/)
-  - tested with node `v17.3.1`
+  - tested with node `v17.5.0`
 - [yarn](https://classic.yarnpkg.com/lang/en/docs/install/) or [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
-### download app
+### yarn & npm
+
+<details>
+  <summary>install from package manager</summary>
 
 ```
 yarn global add @hp4k1h5/terminordle
@@ -76,7 +80,11 @@ yarn global add @hp4k1h5/terminordle
 npm -g install @hp4k1h5/terminordle
 ```
 
-or clone this repo
+</details>
+
+### or clone this repo
+<details>
+  <summary>git clone</summary>
 
 ```bash
 # clone this repo
@@ -91,6 +99,8 @@ yarn build # or # npm run build
 # optional
 yarn link # or # npm link
 ```
+
+</details>
 
 --- 
 
@@ -116,7 +126,7 @@ terminordle play
 
 ### remote multiplayer
 
-To start or join a multiplayer session you must know the address of a running terminordle server. See [#serve](#serve). I currently have one running at `http://terminordle.fun`. If the server is up and not overloaded, you can use it for your multiplayer sessions, or you can [host your own](#serve). See [data policy](#data-privacy) below.
+To start or join a multiplayer session you must know the address of a running terminordle server. See [#serve](#serve). I currently have one running at `wss://terminordle.fun`. If the server is up and not overloaded, you can use it for your multiplayer sessions, or you can [host your own](#serve). See [data policy](#data-privacy) below.
 
 The key command is `join`.
 

@@ -1,6 +1,7 @@
 # ignore npm, yarn
 node_modules/
 yarn.lock
+yarn-error.log
 
 # ignore ts build
 dist/
