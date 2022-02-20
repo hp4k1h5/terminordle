@@ -46,7 +46,7 @@ If you are on a mac, you can use [homebrew](https://brew.sh/).
 
 ```bash
 # tap repo
-brew tap --force-auto-update hp4k1h5/terminordle https://github.com/HP4k1h5/terminordle.git
+brew tap --force-auto-update hp4k1h5/terminordle https://github.com/hp4k1h5/terminordle.git
 # install
 brew install terminordle
 ```
@@ -71,9 +71,9 @@ brew install terminordle
 ### download app
 
 ```
-yarn global add @hP4k1h5/terminordle
+yarn global add @hp4k1h5/terminordle
 # OR
-npm -g install terminordle
+npm -g install @hp4k1h5/terminordle
 ```
 
 or clone this repo
@@ -81,7 +81,7 @@ or clone this repo
 ```bash
 # clone this repo
 
-git clone https://github.com/HP4k1h5/terminordle.git
+git clone https://github.com/hp4k1h5/terminordle.git
 
 # build the app
 
@@ -104,7 +104,7 @@ terminordle help
 
 ## *PLAY*
 
-if you installed globally (`npm -g install @hP4k1h5/terminordle` / `yarn global add @hP4k1h5/terminordle`) then you should have a global alias `terminordle`. You can also `cd` to this repo and run `yarn link`.
+if you installed globally (`npm -g install @hp4k1h5/terminordle` / `yarn global add @hp4k1h5/terminordle`) then you should have a global alias `terminordle`. You can also `cd` to this repo and run `yarn link`.
 
 ### local single player
 
@@ -232,7 +232,7 @@ Standard wordle rules mostly apply (mostly, submit an issue if there are discrep
 
 ## data privacy
 
-This application makes no attempts to log or store or analyze any user data with the non-exclusive list of exceptions below. These exceptions should only apply if you are using the application in network (multiplayer) mode, and you are connecting to a server managed by [@HP4k1h5](https://github.com/HP4k1h5). If you are using it locally, this app collects no data. In other cases, this software and its contributing authors make NO claims as to the reliability of service, or safety of connecting to any server not managed by @HP4k1h5, or the integrity of data privacy guarantees offered by those providers. Other servers may be running modified or corrupted versions of this software or may have other data privacy policies that are not in alignment with those expressed here.
+This application makes no attempts to log or store or analyze any user data with the non-exclusive list of exceptions below. These exceptions should only apply if you are using the application in network (multiplayer) mode, and you are connecting to a server managed by [@hp4k1h5](https://github.com/hp4k1h5). If you are using it locally, this app collects no data. In other cases, this software and its contributing authors make NO claims as to the reliability of service, or safety of connecting to any server not managed by @hp4k1h5, or the integrity of data privacy guarantees offered by those providers. Other servers may be running modified or corrupted versions of this software or may have other data privacy policies that are not in alignment with those expressed here.
 
 ### possible data collection exceptions
 

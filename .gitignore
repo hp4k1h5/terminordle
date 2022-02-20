@@ -12,3 +12,5 @@ cloud-config.yml
 
 # env
 .env
+
+brew_pub.bash
