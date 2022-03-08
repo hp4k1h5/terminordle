@@ -228,7 +228,8 @@ export function guess(
     } else if (session.guesses.length >= MAX_GUESSES) {
       const lossMsg = {
         type: ClientMsgType.again,
-        content: 'out of guesses (20)',
+        content: `out of guesses (20)
+ANSWER: ${session.answer}`,
       }
       // update client
       msg(guest, lossMsg)
