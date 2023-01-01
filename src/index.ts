@@ -55,7 +55,7 @@ export function updateAlphabet(guess: Row): void {
 // determine whether to mark a letter exists (yellow)
 // i.e. whether the letter
 //   - exists somewhere in the answer
-//   - does not exist in that postion
+//   - does not exist in that position
 //   - is not already accounted for by previous guess instances of the letter
 function letterExists(guess: Row, i: number, answer: Row): boolean {
   const option = guess[i]
@@ -91,7 +91,7 @@ function letterExists(guess: Row, i: number, answer: Row): boolean {
     return true
   }
 
-  // this are too many instances
+  // there are too many instances
   return false
 }
 

@@ -1,14 +1,14 @@
 {
   "name": "@hp4k1h5/terminordle",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "license": "MIT",
   "scripts": {
     "help": "yarn dev --help",
+    "dev": "yarn build && node dist/src/cli/index.js",
     "play": "yarn dev play",
     "join": "yarn dev join",
     "serve": "yarn dev serve",
     "test": "mocha -r ts-node/register 'tests/**/*.*'",
-    "dev": "yarn build && node dist/src/cli/index.js",
     "build": "rm -rf dist/ && tsc && cp -r dist_data dist",
     "pub": "yarn build && npm publish --access public"
   },
