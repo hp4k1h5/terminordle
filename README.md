@@ -8,9 +8,8 @@ terminordle (pronounced "terminalordle") is inspired by the popular online game 
 
 ## changelog
 
-- **v0.1.3** 
-  - [wss support](#wss-support). Now supports secure connections
-
+- **v0.1.14** 
+  - bump deps
 --- 
 
 <!-- vim-markdown-toc GFM -->
