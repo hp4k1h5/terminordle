@@ -5,8 +5,8 @@ require "language/node"
 class Terminordle < Formula
   desc "Multiplayer wordle in the terminal"
   homepage "https://github.com/HP4k1h5/terminordle/"
-  url "https://registry.npmjs.org/@hp4k1h5/terminordle/-/terminordle-0.1.12.tgz"
-  sha256 "264206f044dc633910754f1b9bcfda0ec0a1d6f8b0c38b3010bda5a4440f270f"
+  url "https://registry.npmjs.org/@hp4k1h5/terminordle/-/terminordle-0.1.14.tgz"
+  sha256 "4b96c02737e7e9ea35434db62bb6b9915e9d3d971c3ac9855f30e4a7af07a71f"
   license "MIT"
 
   depends_on "node"
